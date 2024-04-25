@@ -1,7 +1,7 @@
 <template>
     <nav>
         <div class="logo">
-            <img src="" alt="">
+            <img src="/src/assets/logo.png" alt="">
         </div>
         <ul>
             <li><router-link to="/">HOME</router-link></li>
@@ -12,9 +12,9 @@
     </nav>
 </template>
 
-<script lang="ts">
+<script>
 export default {
-    name: 'Navbar',
+    name: 'Navbar_Component',
 }
 </script>
 

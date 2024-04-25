@@ -1,6 +1,7 @@
-import vue from 'vue';
-import Router from 'vue-router';
-import HomeView from '@/views/HomeView.vue';
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import HomeView from '@/views/Home_View.vue';
+import App from './App.vue';
 
 Vue.use(Router);
 
