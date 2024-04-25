@@ -1,18 +1,18 @@
-<template>
+r-log<template>
     <nav class="navbar">
         <div class="navbar-logo">
             <img src="@/assets/logo.png" alt="Logo" />
+        </div>
+        <div class="navbar-menu" v-bind:class="{ active: menuVisible }" v-show="!isMobile || menuVisible">
+            <router-link to="/" class="navbar-item">INICIO</router-link>
+            <router-link to="" class="navbar-item">INICIO</router-link>
+            <router-link to="" class="navbar-item">INICIO</router-link>
+            <router-link to="" class="navbar-item">INICIO</router-link>
         </div>
         <div class="navbar-toggler-container" v-if="isMobile" @click="toggleMenu">
             <button class="navbar-toggler">
                 <span class="toggler-icon" :class="{ 'toggler-icon-active': menuVisible }"></span>
             </button>
-        </div>
-        <div class="navbar-menu" v-bind:class="{ active: menuVisible }" v-show="!isMobile || menuVisible">
-            <router-link to="/" class="navbar-item">INICIO</router-link>
-            <router-link to="" class="navbar-item">ABOUT</router-link>
-            <router-link to="" class="navbar-item">SERVICES</router-link>
-            <router-link to="" class="navbar-item">CONTACT</router-link>
         </div>
     </nav>
 </template>
@@ -168,7 +168,8 @@ export default {
 
     .navbar-toggler-container {
         display: flex;
-        justify-content: flex-end;
+        justify-content: right;
+        margin-right: 3%;
         width: 100%;
     }
 
@@ -192,7 +193,8 @@ export default {
     }
 
     .navbar-toggler {
-        display: block;
+        background: url('/src/assets/menu.png');
+        background-size: cover;
         width: 30px;
         height: 30px;
         z-index: 101;
