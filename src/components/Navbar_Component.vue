@@ -77,8 +77,8 @@ export default {
 
 .navbar-logo img {
     animation: rotate-logo 10s linear infinite;
-    width: 40px;
-    height: auto;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     margin-left: 1rem;
     margin-top: 0.5rem;
@@ -94,7 +94,7 @@ export default {
     text-decoration: none;
     color: #333;
     font-weight: bold;
-    font-size: 11px;
+    font-size: 20px;
     font-family: Georgia, 'Times New Roman', Times, serif;
     padding: 0.5rem 1rem;
     border-radius: 5px;
@@ -154,7 +154,7 @@ export default {
     .navbar {
         flex-direction: row;
         justify-content: space-between;
-        padding: 0.5rem;
+        padding: 1rem;
     }
 
     .navbar-toggler-icon::after,
@@ -163,38 +163,51 @@ export default {
     }
 
     .navbar-logo img {
+        width: 60px;
+        height: 60px;
         margin-bottom: 0.5rem;
     }
 
     .navbar-toggler-container {
         display: flex;
-        justify-content: right;
-        margin-right: 3%;
+        justify-content: flex-end;
+        margin-right: 2rem;
         width: 100%;
     }
 
     .navbar-menu {
         display: none;
         flex-direction: column;
-        position: fixed;
         top: 60px;
-        left: 0;
+        left: 50%;
         width: 100%;
+        background-color: white;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        width: 100%;
+        align-items: center;
+        overflow: hidden;
+        margin-left: 12%;
+        padding-left: 10%;
+        padding-right: 10%;
     }
 
     .navbar-menu.active {
         display: flex;
-        transform: translateX(0%);
+        transition: transform 03.s ease-in-out;
     }
 
     .navbar-item {
-        padding: 0.5rem;
-        text-align: left;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        font-size: 12px;
+        padding: 1rem;
+        margin: 0.5rem 0;
     }
 
     .navbar-toggler {
         background: url('/src/assets/menu.png');
-        background-size: cover;
+        background-size: contain;
         width: 30px;
         height: 30px;
         z-index: 101;
