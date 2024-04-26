@@ -66,6 +66,15 @@ export default {
         transform: rotate(0deg);
     }
 
+    0%,
+    100% {
+        transform: translateX(0) rotate(0deg);
+    }
+
+    25% {
+        transform: translateX(40px) rotate(90deg);
+    }
+
     50% {
         transform: rotate(180deg);
     }
@@ -182,7 +191,7 @@ export default {
         left: 50%;
         width: 100%;
         background-color: white;
-        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         width: 100%;
         align-items: center;
         overflow: hidden;
