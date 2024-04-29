@@ -36,10 +36,8 @@ export default {
     transform: translate(-50%, -50%);
     min-width: 100%;
     min-height: 100%;
-    width: auto;
-    height: auto;
     z-index: -1;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .call-to-action {
@@ -72,5 +70,14 @@ export default {
     background-color: #e27635;
     transform: scale(1.05);
     box-shadow: 0 12px 20px rgba(0, 0, 0, 0.4);
+}
+
+@media (max-width: 1768px) {
+
+    .home-container {
+        margin-top: 15%;
+        height: 50vh;
+    }
+
 }
 </style>

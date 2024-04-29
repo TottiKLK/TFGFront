@@ -28,6 +28,7 @@ export default {
             { id: 1, name: 'Pista keloke', image: require('../assets/Pista.png' )},
             { id: 1, name: 'Pista principiantes', image: require('../assets/Pista.png' )},
             { id: 1, name: 'Pista Render', image: require('../assets/Pista.png' )},
+            { id: 1, name: 'Pista Render', image: require('../assets/Pista.png' )},
             ],
             
         };
@@ -39,6 +40,7 @@ export default {
 .reservation-page {
     max-width: 600px;
     margin: 0 auto;
+    margin-top: 130px;
     text-align: center;
 }
 

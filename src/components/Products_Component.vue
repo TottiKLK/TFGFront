@@ -61,12 +61,24 @@ export default {
                     description: 'Perfecta para empezar en el mundo del padel.',
                     image: require('@/assets/RaquetaPadel.jpg'),
                 },
+                {
+                    id: 2,
+                    name: 'Pala Iniciación',
+                    description: 'Perfecta para empezar en el mundo del padel.',
+                    image: require('@/assets/RaquetaPadel.jpg'),
+                },
             ],
             accesorios: [
                 {
                     id: 1,
                     name: 'Overgrip Comfort',
                     description: 'Mejora tu agarre y juego con el Overgrip Comfort, que proporciona una adherencia excepcional y una sensación suave al tacto.',
+                    image: require('@/assets/accesorios.jpg'),
+                },
+                {
+                    id: 2,
+                    name: 'Antivibradores ShockFree',
+                    description: 'Los Antivibradores ShockFree reducen las vibraciones del impacto y protegen tu brazo, permitiéndote jugar con mayor comodidad.',
                     image: require('@/assets/accesorios.jpg'),
                 },
                 {
@@ -89,6 +101,12 @@ export default {
                     description: 'Con su diseño elegante y tejido flexible, la Falda Deportiva Ace es perfecta para moverse libremente y con estilo.',
                     image: require('@/assets/ropa.jpg'),
                 },
+                {
+                    id: 1,
+                    name: 'Camiseta TenisPro',
+                    description: 'Mantente fresco en la cancha con la Camiseta TenisPro, fabricada con materiales que absorben la humedad y ofrecen máxima movilidad.',
+                    image: require('@/assets/ropa.jpg'),
+                },
             ],
         };
     },
@@ -99,6 +117,7 @@ export default {
 .products-section {
     text-align: center;
     margin-top: 2rem;
+    padding: 2rem 0;
 }
 
 .products-section h1 {
@@ -109,11 +128,16 @@ export default {
     font-weight: bold;
 }
 
-
 .products-nav {
     display: flex;
     justify-content: center;
     margin-bottom: 1rem;
+}
+
+.title {
+    font-size: 2.5rem;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .products-nav button {
