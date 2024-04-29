@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import HomeView from '@/views/Home_View.vue';
 import App from './App.vue';
 import ReservasView from '@/views/Reservas_View.vue';
+import PerfilView from '@/views/Perfil_View.vue';
 
 Vue.use(VueRouter);
 
@@ -19,6 +20,11 @@ export default new Router({
             path: '/reservas',
             name: 'reservas',
             component: ReservasView,
+        },
+        {
+            path: '/perfil',
+            name: 'perfil',
+            component: PerfilView,
         },
     ]
 })

@@ -7,7 +7,7 @@
             <router-link to="/" class="navbar-item">INICIO</router-link>
             <router-link to="reservas" class="navbar-item">RESERVAS</router-link>
             <router-link to="" class="navbar-item">INICIO</router-link>
-            <router-link to="" class="navbar-item">INICIO</router-link>
+            <router-link to="/perfil" class="navbar-item">PERFIL</router-link>
         </div>
         <div class="navbar-toggler-container" v-if="isMobile" @click="toggleMenu">
             <button class="navbar-toggler">

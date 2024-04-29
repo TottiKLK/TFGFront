@@ -3,6 +3,7 @@ import App from './App.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '@/views/Home_View.vue';
 import  ReservasView from '/src/views/Reservas_View.vue';
+import PerfilView from '/src/views/Perfil_View.vue';
 
 const routes = [
     {
@@ -14,6 +15,11 @@ const routes = [
         path: '/reservas',
         name: 'reservas',
         component: ReservasView,
+    },
+    {
+        path: '/perfil',
+        name: 'perfil',
+        component: PerfilView,
     },
 ];
 
