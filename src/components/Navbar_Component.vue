@@ -1,11 +1,11 @@
-r-log<template>
+<template>
     <nav class="navbar">
         <div class="navbar-logo">
             <img src="@/assets/logo.png" alt="Logo" />
         </div>
         <div class="navbar-menu" v-bind:class="{ active: menuVisible }" v-show="!isMobile || menuVisible">
             <router-link to="/" class="navbar-item">INICIO</router-link>
-            <router-link to="" class="navbar-item">INICIO</router-link>
+            <router-link to="reservas" class="navbar-item">RESERVAS</router-link>
             <router-link to="" class="navbar-item">INICIO</router-link>
             <router-link to="" class="navbar-item">INICIO</router-link>
         </div>
@@ -59,6 +59,7 @@ export default {
     top: 0;
     left: 0;
     z-index: 100;
+    margin-bottom: 2%;
 }
 
 @keyframes rotate-logo {

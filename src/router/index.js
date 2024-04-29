@@ -2,17 +2,27 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import HomeView from '@/views/Home_View.vue';
 import App from './App.vue';
+import ReservasView from '@/views/Reservas_View.vue';
 
-Vue.use(Router);
+Vue.use(VueRouter);
 
 export default new Router({
     mode: 'history',
     base: process.env.BASE_URL,
-    routes:[
+    routes: [
         {
             path: '/',
             name: 'home',
             component: HomeView,
         },
+        {
+            path: '/reservas',
+            name: 'reservas',
+            component: ReservasView,
+        },
     ]
 })
+new Vue({
+    router,
+    render: h => h(App)
+}).$mount('#app');

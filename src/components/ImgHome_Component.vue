@@ -1,8 +1,11 @@
 <template>
     <div class="home-container">
-        <div class="background-blur"></div>
+        <video autoplay muted loop class="background-video">
+            <source src="../assets/videobuenocopia.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
         <div class="call-to-action">
-            <button @click="scrollToProducts">Ver productos</button>
+            <button @click="$router.push('/sobre-nosotros')">Sobre nosotros</button>
         </div>
     </div>
 </template>
@@ -10,80 +13,64 @@
 <script>
 export default {
     name: 'HomeComponent',
-    methods: {
-        scrollToProducts() {
-            const productsSection = this.$el.querySelector('#productos');
-            if (productsSection) {
-                productsSection.scrollIntoView({ behavior: 'smooth' });
-            }
-        },
-    },
 };
 </script>
 
 <style scoped>
 .home-container {
-    background-image: url('/src/assets/fondo.png');
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    height: 900px;
-    margin: 15vh auto;
+    width: 100%;
+    height: 70vh;
+    margin: 0 auto;
+    margin-top: 5%;
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
     overflow: hidden;
-    border: 3px solid black;
 }
 
-.background-blur {
-    background-image: url('/src/assets/fondo.png');
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
+.background-video {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    filter: blur(8px);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
     z-index: -1;
+    object-fit: cover;
 }
 
 .call-to-action {
-    background-color: #ffffff;
-    color: #ffffff;
-    border: none;
-    padding: 0.8rem 1.6rem;
+    padding: 1rem 2rem;
     cursor: pointer;
-    border-radius: 20px;
-    font-size: 1rem;
+    border-radius: 30px;
+    font-size: 1.5rem;
     font-weight: bold;
-    letter-spacing: 1px;
-    transition: background-color 0.3s, box-shadow 0.3s;
+    letter-spacing: 0.5px;
     position: relative;
-    z-index: 1;
+    z-index: 2;
 }
 
 .call-to-action button {
     background-color: #f28d35;
     color: #ffffff;
-    border: 2px solid #ffffff;
-    padding: 1rem 2rem;
+    border: none;
+    padding: 1.5rem 3rem;
     cursor: pointer;
     border-radius: 30px;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     font-weight: bold;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
 }
 
 .call-to-action button:hover,
 .call-to-action button:focus {
-    background-color: #ca7d2e;
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+    background-color: #e27635;
     transform: scale(1.05);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.4);
 }
 </style>
