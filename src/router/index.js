@@ -26,6 +26,11 @@ export default new Router({
             name: 'perfil',
             component: PerfilView,
         },
+        {
+            path: '/sobrenosotros',
+            name: 'sobrenosotros',
+            component: SobreNosotros,
+        },
     ]
 })
 new Vue({

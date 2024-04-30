@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '@/views/Home_View.vue';
 import  ReservasView from '/src/views/Reservas_View.vue';
 import PerfilView from '/src/views/Perfil_View.vue';
+import SobreNosotros from '../src/views/SobreNosotros_View.vue';
 
 const routes = [
     {
@@ -20,6 +21,11 @@ const routes = [
         path: '/perfil',
         name: 'perfil',
         component: PerfilView,
+    },
+    {
+        path: '/sobrenosotros',
+        name: 'sobrenosotros',
+        component: SobreNosotros,
     },
 ];
 
