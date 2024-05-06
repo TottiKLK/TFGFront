@@ -5,9 +5,12 @@
         </div>
         <div class="navbar-menu" v-bind:class="{ active: menuVisible }" v-show="!isMobile || menuVisible">
             <router-link to="/" class="navbar-item">INICIO</router-link>
-            <router-link to="reservas" class="navbar-item">RESERVAS</router-link>
+            <router-link to="/" class="navbar-item">PRODUCTOS</router-link>
+            <router-link to="reservas" class="navbar-item">PISTAS</router-link>
+            <router-link to="reservas" class="navbar-item">PARTIDOS</router-link>
             <router-link to="/sobrenosotros" class="navbar-item">SOBRE NOSOTROS</router-link>
             <router-link to="/perfil" class="navbar-item">PERFIL</router-link>
+            <img class="navbar-item" src="@/assets/imagen_carrito.png" alt="Imagen carrito">
         </div>
         <div class="navbar-toggler-container" v-if="isMobile" @click="toggleMenu">
             <button class="navbar-toggler">
