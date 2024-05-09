@@ -118,6 +118,7 @@ export default {
 
 <style scoped>
 .products-section {
+    padding-top: 4rem;
     text-align: center;
 }
 
@@ -182,18 +183,15 @@ export default {
 
 .products-display {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
     gap: 20px;
+    justify-content: center;
 }
 
 .product-card {
     border: 1px solid #ddd;
     border-radius: 5px;
-    overflow: hidden;
-    margin: 1rem;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    width: 300px;
+    overflow: hidden;
 }
 
 .product-image {
