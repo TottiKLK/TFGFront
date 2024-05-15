@@ -10,7 +10,6 @@
             <router-link to="reservas" class="navbar-item">PARTIDOS</router-link>
             <router-link to="/sobrenosotros" class="navbar-item">SOBRE NOSOTROS</router-link>
             <router-link to="/perfil" class="navbar-item">PERFIL</router-link>
-            <img class="navbar-item, imagenCarrito" src="@/assets/imagen_carrito.png" alt="Imagen carrito">
         </div>
         <div class="navbar-toggler-container" v-if="isMobile" @click="toggleMenu">
             <button class="navbar-toggler">

@@ -4,6 +4,7 @@
             <source src="../assets/videobuenocopia.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
+        <div class="overlay"></div>
         <div class="call-to-action">
             <button @click="$router.push('/sobre-nosotros')">Sobre nosotros</button>
         </div>
@@ -22,6 +23,7 @@ export default {
     height: 70vh;
     margin: 0 auto;
     margin-top: 5%;
+    margin-bottom: 1%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -37,7 +39,17 @@ export default {
     min-width: 100%;
     min-height: 100%;
     z-index: -1;
-    object-fit: contain;
+    object-fit: cover; /* Cambiado de contain a cover */
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Filtro oscuro */
+    z-index: 0;
 }
 
 .call-to-action {
@@ -73,11 +85,9 @@ export default {
 }
 
 @media (max-width: 1768px) {
-
     .home-container {
         margin-top: 15%;
         height: 50vh;
     }
-
 }
 </style>
