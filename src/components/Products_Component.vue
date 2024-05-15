@@ -116,6 +116,7 @@ export default {
 <style scoped>
 .products-section {
     padding: 4rem 2rem;
+    margin-top: 4%;
     text-align: center;
     background-color: #f9f9f9;
 }
