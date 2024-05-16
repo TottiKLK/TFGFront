@@ -7,6 +7,7 @@
                 <div>
                     <h4>{{ product.name }}</h4>
                     <p>{{ product.description }}</p>
+                    <p>Cantidad: {{ product.quantity }}</p>
                     <button @click="removeFromCart(index)" class="remove-product-button">Eliminar</button>
                 </div>
             </li>
@@ -25,6 +26,9 @@ export default {
     methods: {
         toggleCart() {
             this.$emit('toggle-cart');
+        },
+        removeFromCart(index) {
+            this.$emit('remove-from-cart', index);
         }
     }
 };
@@ -42,6 +46,8 @@ export default {
     padding: 1rem;
     border-radius: 5px;
     z-index: 100;
+    max-height: 500px; /* Limita la altura total del carrito */
+    overflow-y: auto;  /* Añade desplazamiento vertical */
 }
 
 .cart-dropdown h3 {
@@ -53,6 +59,7 @@ export default {
 .cart-dropdown ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 .cart-dropdown li {

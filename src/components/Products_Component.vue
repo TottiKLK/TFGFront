@@ -40,7 +40,8 @@
                 </div>
             </div>
         </div>
-        <CartComponent :cart="cart" v-if="cartVisible" @toggle-cart="toggleCart" />
+        <div v-if="showMessage" class="message">{{ message }}</div>
+        <CartComponent :cart="cart" v-if="cartVisible" @toggle-cart="toggleCart" @remove-from-cart="removeFromCart" />
     </div>
 </template>
 
@@ -72,13 +73,13 @@ export default {
             ],
             accesorios: [
                 {
-                    id: 1,
+                    id: 3,
                     name: 'Overgrip Comfort',
                     description: 'Mejora tu agarre y juego con el Overgrip Comfort, que proporciona una adherencia excepcional y una sensación suave al tacto.',
                     image: require('@/assets/accesorios.jpg'),
                 },
                 {
-                    id: 2,
+                    id: 4,
                     name: 'Antivibradores ShockFree',
                     description: 'Los Antivibradores ShockFree reducen las vibraciones del impacto y protegen tu brazo, permitiéndote jugar con mayor comodidad.',
                     image: require('@/assets/accesorios.jpg'),
@@ -86,28 +87,43 @@ export default {
             ],
             ropa: [
                 {
-                    id: 1,
+                    id: 6,
                     name: 'Camiseta TenisPro',
                     description: 'Mantente fresco en la cancha con la Camiseta TenisPro, fabricada con materiales que absorben la humedad y ofrecen máxima movilidad.',
                     image: require('@/assets/ropa.jpg'),
                 },
                 {
-                    id: 2,
+                    id: 7,
                     name: 'Falda Deportiva Ace',
                     description: 'Con su diseño elegante y tejido flexible, la Falda Deportiva Ace es perfecta para moverse libremente y con estilo.',
                     image: require('@/assets/ropa.jpg'),
                 }
             ],
             cart: [],
-            cartVisible: false
+            cartVisible: false,
+            showMessage: false,
+            message: ''
         };
     },
     methods: {
         addToCart(product) {
-            this.cart.push(product);
+            const cartProduct = this.cart.find(item => item.id === product.id);
+            if (cartProduct) {
+                cartProduct.quantity++;
+            } else {
+                this.cart.push({ ...product, quantity: 1 });
+            }
+            this.message = `${product.name} añadido al carrito!`;
+            this.showMessage = true;
+            setTimeout(() => {
+                this.showMessage = false;
+            }, 3000);
         },
         toggleCart() {
             this.cartVisible = !this.cartVisible;
+        },
+        removeFromCart(index) {
+            this.cart.splice(index, 1);
         }
     }
 };
@@ -223,6 +239,19 @@ export default {
 
 .product-button:hover {
     background-color: #e27635;
+}
+
+.message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #4caf50;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    transition: opacity 0.3s ease;
 }
 
 @media (max-width: 768px) {
