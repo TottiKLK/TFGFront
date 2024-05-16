@@ -156,6 +156,8 @@ export default {
 }
 
 .cart-icon {
+    filter: brightness(1.1); /*Esto es para quitar el fondo de la imagen*/
+    mix-blend-mode: multiply; /*Esto es para quitar el fondo de la imagen*/
     width: 40px;
     margin-left: 1rem;
     cursor: pointer;

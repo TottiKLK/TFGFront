@@ -6,7 +6,7 @@
         </video>
         <div class="overlay"></div>
         <div class="call-to-action">
-            <button @click="$router.push('/sobre-nosotros')">Sobre nosotros</button>
+            <button @click="$router.push('/sobrenosotros')">Sobre nosotros</button>
         </div>
     </div>
 </template>
