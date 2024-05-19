@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import HomeView from '@/views/Home_View.vue';
 import App from './App.vue';
 import ReservasView from '@/views/Reservas_View.vue';
+import PartidosView from '@/views/Partidos_View.vue';
 /*import PerfilView from '@/views/Perfil_View.vue';*/
 
 Vue.use(VueRouter);
@@ -30,6 +31,11 @@ export default new Router({
             path: '/sobrenosotros',
             name: 'sobrenosotros',
             component: SobreNosotros,
+        },
+        {
+            path: '/partidos',
+            name: 'partidos',
+            component: PartidosView,
         },
     ]
 })

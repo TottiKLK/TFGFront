@@ -6,6 +6,8 @@ import  ReservasView from '/src/views/Reservas_View.vue';
 import PerfilView from '/src/views/Perfil_View.vue';
 import SobreNosotros from '../src/views/SobreNosotros_View.vue';
 import Products from '../src/views/Products_View.vue';
+import PartidosView from './views/Partidos_View.vue';
+
 
 const routes = [
     {
@@ -32,6 +34,11 @@ const routes = [
         path: '/products',
         name: 'products',
         component: Products,
+    },
+    {
+        path: '/partidos',
+        name: 'partidos',
+        component: PartidosView,
     },
 ];
 

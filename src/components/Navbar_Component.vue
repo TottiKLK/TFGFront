@@ -7,7 +7,7 @@
             <router-link to="/" class="navbar-item">INICIO</router-link>
             <router-link to="/Products" class="navbar-item">PRODUCTOS</router-link>
             <router-link to="reservas" class="navbar-item">PISTAS</router-link>
-            <router-link to="reservas" class="navbar-item">PARTIDOS</router-link>
+            <router-link to="/partidos" class="navbar-item">PARTIDOS</router-link>
             <router-link to="/sobrenosotros" class="navbar-item">SOBRE NOSOTROS</router-link>
             <router-link to="/perfil" class="navbar-item">PERFIL</router-link>
         </div>
@@ -112,7 +112,6 @@ export default {
     color: #333;
     font-weight: bold;
     font-size: 20px;
-    font-family: Georgia, 'Times New Roman', Times, serif;
     padding: 0.5rem 1rem;
     border-radius: 5px;
     transition: background-color 0.3s;
