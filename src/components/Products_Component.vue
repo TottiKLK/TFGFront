@@ -1,6 +1,6 @@
 <template>
     <div class="products-section">
-        <h1 class="title">NUESTROS PRODUCTOS</h1>
+        <h1 class="title">Nuestros Productos</h1>
         <nav class="products-nav">
             <button v-for="category in categories" :key="category" :class="{ active: activeCategory === category }"
                 @click="activeCategory = category">
@@ -69,6 +69,30 @@ export default {
                     name: 'Pala Iniciación',
                     description: 'Perfecta para empezar en el mundo del padel.',
                     image: require('@/assets/RaquetaPadel.jpg'),
+                },
+                {
+                    id: 12,
+                    name: 'Pala Iniciación',
+                    description: 'Perfecta para empezar en el mundo del padel.',
+                    image: require('@/assets/RaquetaPadel.jpg'),
+                },
+                {
+                    id: 122,
+                    name: 'Pala Iniciación',
+                    description: 'Perfecta para empezar en el mundo del padel.',
+                    image: require('@/assets/RaquetaPadel.jpg'),
+                },
+                {
+                    id: 132,
+                    name: 'Pala Iniciación',
+                    description: 'Perfecta para empezar en el mundo del padel.',
+                    image: require('@/assets/RaquetaPadel.jpg'),
+                },
+                {
+                    id: 142,
+                    name: 'Pala Iniciación',
+                    description: 'Perfecta para empezar en el mundo del padel.',
+                    image: require('@/assets/RaquetaPadel.jpg'),
                 }
             ],
             accesorios: [
@@ -131,15 +155,15 @@ export default {
 
 <style scoped>
 .products-section {
-    padding: 4rem 2rem;
+    padding: 2rem;
     margin-top: 4%;
     text-align: center;
-    background-color: #f9f9f9;
+    background-color: #ffffff;
 }
 
 .title {
-    font-size: 3rem;
-    margin-bottom: 2rem;
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
     color: #333;
     text-transform: uppercase;
     font-weight: bold;
@@ -147,22 +171,25 @@ export default {
 
 .products-nav {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .products-nav button {
-    background-color: transparent;
+    background-color: #ffffff;
     border: 2px solid #f28d35;
     padding: 0.8rem 1.5rem;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 500;
-    margin: 0 1rem;
+    margin: 0.5rem;
     border-radius: 25px;
     cursor: pointer;
     transition: all 0.3s ease;
     color: #f28d35;
+    flex: 1 0 auto;
+    max-width: 150px;
 }
 
 .products-nav button.active,
@@ -172,8 +199,6 @@ export default {
 }
 
 .cart-icon {
-    filter: brightness(1.1); /*Esto es para quitar el fondo de la imagen*/
-    mix-blend-mode: multiply; /*Esto es para quitar el fondo de la imagen*/
     width: 40px;
     margin-left: 1rem;
     cursor: pointer;
@@ -181,6 +206,13 @@ export default {
 
 .products-display {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.product-category {
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
 }
 
@@ -191,9 +223,8 @@ export default {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    width: 100%;
-    max-width: 300px;
-    margin: 0 auto;
+    width: 280px;
+    margin: 1rem;
 }
 
 .product-card:hover {
@@ -255,8 +286,16 @@ export default {
 }
 
 @media (max-width: 768px) {
+    .products-nav {
+        flex-direction: column;
+    }
+
+    .products-nav button {
+        margin: 0.5rem 0;
+    }
+
     .products-display {
-        grid-template-columns: 1fr;
+        flex-direction: column;
     }
 }
 </style>

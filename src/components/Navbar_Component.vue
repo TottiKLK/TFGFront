@@ -8,7 +8,6 @@
             <router-link to="/Products" class="navbar-item">PRODUCTOS</router-link>
             <router-link to="reservas" class="navbar-item">PISTAS</router-link>
             <router-link to="/partidos" class="navbar-item">PARTIDOS</router-link>
-            <router-link to="/sobrenosotros" class="navbar-item">SOBRE NOSOTROS</router-link>
             <router-link to="/perfil" class="navbar-item">PERFIL</router-link>
         </div>
         <div class="navbar-toggler-container" v-if="isMobile" @click="toggleMenu">
