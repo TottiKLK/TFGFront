@@ -6,7 +6,7 @@
         <div class="navbar-menu" v-bind:class="{ active: menuVisible }" v-show="!isMobile || menuVisible">
             <router-link to="/" class="navbar-item">INICIO</router-link>
             <router-link to="/Products" class="navbar-item">PRODUCTOS</router-link>
-            <router-link to="reservas" class="navbar-item">PISTAS</router-link>
+            <router-link to="/reservas" class="navbar-item">PISTAS</router-link>
             <router-link to="/partidos" class="navbar-item">PARTIDOS</router-link>
             <router-link to="/perfil" class="navbar-item">PERFIL</router-link>
         </div>

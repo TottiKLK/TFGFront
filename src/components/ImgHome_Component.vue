@@ -6,7 +6,7 @@
         </video>
         <div class="overlay"></div>
         <div class="call-to-action">
-            <button @click="$router.push('/')">PadelIM</button>
+            <div class="company-name">PadelIM</div>
         </div>
     </div>
     <div class="about-us-container">
@@ -72,7 +72,7 @@ export default {
     min-width: 100%;
     min-height: 100%;
     z-index: -1;
-    object-fit: cover; /* Cambiado de contain a cover */
+    object-fit: cover;
 }
 
 .overlay {
@@ -81,13 +81,12 @@ export default {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Filtro oscuro */
+    background: rgba(0, 0, 0, 0.5);
     z-index: 0;
 }
 
 .call-to-action {
     padding: 1rem 2rem;
-    cursor: pointer;
     border-radius: 30px;
     font-size: 1.5rem;
     font-weight: bold;
@@ -96,22 +95,22 @@ export default {
     z-index: 2;
 }
 
-.call-to-action button {
+.company-name {
     background-color: #f28d35;
     color: #ffffff;
-    border: none;
     padding: 1.5rem 3rem;
-    cursor: pointer;
     border-radius: 30px;
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: bold;
     letter-spacing: 1px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     text-transform: uppercase;
+    text-align: center;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    font-family: 'Poppins', sans-serif; /* Aplicar la fuente Poppins */
 }
 
-.call-to-action button:hover,
-.call-to-action button:focus {
+.company-name:hover,
+.company-name:focus {
     background-color: #e27635;
     transform: scale(1.05);
     box-shadow: 0 12px 20px rgba(0, 0, 0, 0.4);
@@ -120,7 +119,7 @@ export default {
 .about-us-container {
     text-align: center;
     color: #333;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Poppins', sans-serif; /* Aplicar la fuente Poppins */
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -187,4 +186,5 @@ export default {
         height: 50vh;
     }
 }
+
 </style>
