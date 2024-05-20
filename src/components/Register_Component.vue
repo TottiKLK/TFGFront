@@ -1,116 +1,139 @@
 <template>
-    <div class="register-container">
+    <div class="form-container">
+        <h2>Registro</h2>
         <form @submit.prevent="register">
-            <input type="email" v-model="email" placeholder="Email" required>
-            <input type="password" v-model="password" placeholder="Password" required>
-            <input type="password" v-model="confirmPassword" placeholder="Confirm Password" required>
-            <button type="submit">Register</button>
+            <input v-model="userData.name" type="text" placeholder="Nombre" required>
+            <input v-model="userData.email" type="email" placeholder="Email" required>
+            <input v-model="userData.password" type="password" placeholder="Contraseña" required>
+            <button type="submit">Registrarse</button>
         </form>
-        <button @click="cambiar">¿Ya tienes cuenta? Inicia sesión</button>
+        <button @click="switchToLogin">¿Ya tienes cuenta? Inicia sesión</button>
+        <p v-if="error" class="error">{{ errorMessage }}</p>
     </div>
 </template>
 
 <script>
+import { register } from '@/services/authService';
+
 export default {
-    name: 'Register_Component',
     data() {
         return {
-            email: '',
-            password: '',
-            confirmPassword: ''
-        }
+            userData: {
+                name: '',
+                email: '',
+                password: '',
+                rol: 2,  // Asumie ndo que '2' es el rol por defecto para usuarios regulares
+            },
+            error: false,
+            errorMessage: '',
+        };
     },
     methods: {
-        register() {
-            if (this.password !== this.confirmPassword) {
-                alert('Las contraseñas no coinciden');
-                return;
+        async register() {
+            if (this.validateForm()) {
+                try {
+                    const userData = {
+                        UserName: this.userData.name,
+                        Email: this.userData.email,
+                        Password: this.userData.password,
+                        Rol: this.userData.rol
+                    };
+                    const response = await register(userData);  // Guarda la respuesta para usarla
+                    alert('Registro exitoso, por favor inicie sesión.');
+                    console.log(response);  // Puedes usar la respuesta para algo específico aquí
+                    this.switchToLogin();
+                } catch (error) {
+                    this.error = true;
+                    this.errorMessage = 'No se pudo crear la cuenta: ' + (error.response ? error.response.data.message : error.message);
+                    console.error('Error al registrar:', error);
+                }
             }
-            console.log('Registrando con:', this.email, this.password);
         },
-        cambiar() {
-            this.$emit('cambio');
+        switchToLogin() {
+            this.$emit('switch-form');  // Emite un evento para cambiar al formulario de login
+        },
+        validateForm() {
+            if (!this.userData.name || !this.userData.email || !this.userData.password) {
+                this.error = true;
+                this.errorMessage = 'Todos los campos son obligatorios.';
+                return false;
+            }
+            if (!this.userData.email.includes('@')) {
+                this.error = true;
+                this.errorMessage = 'Por favor ingrese un correo electrónico válido.';
+                return false;
+            }
+            return true;
         }
-    }
+    },
 }
 </script>
 
 <style scoped>
-html,
-body {
-    height: 100%;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #333;
-}
-
-.register-container {
-    width: 100%;
-    max-width: 450px;
-    padding: 40px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
-    text-align: center;
-}
-
-.register-container form {
+.form-container {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    margin: 40px auto;
 }
 
-input[type=email],
-input[type=password],
-button[type=submit] {
-    padding: 16px;
-    border: 1px solid #000000;
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+    width: 94%;
+    padding: 10px;
+    margin: 0.5rem 0;
+    border: 2px solid #cccccc;
     border-radius: 5px;
-    font-size: 18px;
+    transition: border-color 0.3s;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="text"]:focus {
+    border-color: #FF4500;
+    box-shadow: 0 0 8px rgba(255, 69, 0, 0.2);
     outline: none;
 }
 
-input[type=email],
-input[type=password] {
-    background: #eee;
-}
-
-button[type=submit] {
-    background-color: #ff7f50;
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #FF4500;
     color: white;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: background-color 0.3s, transform 0.2s;
+    font-size: 16px;
     font-weight: bold;
+    margin-bottom: 1%;
+    margin-top: 2%;
 }
 
-button[type=submit]:hover {
-    background-color: #ff4500;
-    border-color: #ff4500;
+button:hover {
+    background-color: #E04000;
     transform: scale(1.05);
 }
 
-.register-container button:not([type="submit"]) {
-    background: none;
-    border: none;
-    color: #ff7f50;
-    margin-top: 20px;
+button+button {
+    margin-top: 15px;
+}
+
+.error {
+    color: #D8000C;
+    background-color: #FFD2D2;
+    border-radius: 5px;
     padding: 10px;
-    font-size: 18px;
-    cursor: pointer;
-    transition: color 0.3s;
-}
-
-.register-container button:not([type="submit"]):hover {
-    color: #ff4500;
-    font-weight: bold;
-}
-
-@media only screen and (max-width: 600px) {
-    .register-container {
-        width: 90%;
-        margin: 0 5%;
-    }
+    margin-top: 15px;
+    width: 90%;
+    text-align: center;
 }
 </style>
