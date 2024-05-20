@@ -56,6 +56,7 @@ export default {
 }
 
 .header h1 {
+    margin-top: 10%;
     font-size: 3rem;
     color: #ff9d0a;
     margin-bottom: 0.5em;
