@@ -1,57 +1,72 @@
 <template>
-    <div class="field">
-        <Field_Component />
-        <div  class="fieldgrid">
-            <div v-for="(availablePosition, index) in availablePositions" :key="index" class="fielditem">
-                <Player_Component @toggle="changeSelected(index)" :isSelected="selectedPlayer === index" :notAvailable="availablePosition"/>
-            </div>
-        </div>
-    </div>  
+  <div class="container">
+    <h1>Zona de Partidos</h1>
+    <div class="partidos-grid">
+      <div class="partido-card" v-for="(match, index) in matches" :key="index">
+        <img :src="require(`@/assets/${match.image}`)" alt="Imagen del partido" class="partido-image" />
+        <h2>{{ match.title }}</h2>
+        <p>{{ match.description }}</p>
+        <router-link :to="{ name: 'PartidoDetailView', params: { id: index } }">
+          <button>Ver detalle del partido</button>
+        </router-link>
+      </div>
+    </div>
+  </div>
 </template>
-
 
 <script setup>
 import { ref } from 'vue';
-import Field_Component from '@/components/Field_Component.vue';
-import Player_Component from '@/components/Player_Component.vue';
 
-const availablePositions = ref([true, true, false, false]);
-const selectedPlayer = ref(null);
-
-function changeSelected(index) {
-    if (selectedPlayer.value === index) {
-        selectedPlayer.value = null;
-    } else {
-        selectedPlayer.value = index;
-    }
-}
+const matches = ref([
+  { title: 'Partido 1', description: 'Descripción del Partido 1', image: 'p1.jpg' },
+  { title: 'Partido 2', description: 'Descripción del Partido 2', image: 'p2.jpg' },
+  { title: 'Partido 3', description: 'Descripción del Partido 3', image: 'p3.jpg' },
+  { title: 'Partido 4', description: 'Descripción del Partido 4', image: 'p1.jpg' },
+  // Añadir más partidos según sea necesario
+]);
 </script>
 
-
 <style scoped>
-.fieldgrid{
-    display: grid;
-    width: 198px;
-    height: 194px;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    grid-template-rows: repeat(2, minmax(0, 1fr));
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    transform: translate(-50%, -50%);
-}
-.field{
-    position: relative;
-    display: flex;
-    justify-content: center;
+.container {
+  margin-top: 5%;
+  text-align: center;
+  padding: 20px;
 }
 
-.fielditem{
-    place-self: center;
+.partidos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
 }
 
-.fielditem:nth-child(odd) {
-    transform: scaleX(-1);
+.partido-card {
+  border: 1px solid #ddd;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: left;
 }
 
+.partido-image {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
 </style>

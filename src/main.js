@@ -2,12 +2,12 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '@/views/Home_View.vue';
-import  ReservasView from '/src/views/Reservas_View.vue';
-import PerfilView from '/src/views/Perfil_View.vue';
-import SobreNosotros from '../src/views/SobreNosotros_View.vue';
-import Products from '../src/views/Products_View.vue';
-import PartidosView from './views/Partidos_View.vue';
-
+import ReservasView from '@/views/Reservas_View.vue';
+import PerfilView from '@/views/Perfil_View.vue';
+import SobreNosotros from '@/views/SobreNosotros_View.vue';
+import Products from '@/views/Products_View.vue';
+import PartidosView from '@/views/Partidos_View.vue';
+import PartidoDetailView from '@/views/PartidoDetail_View.vue';
 
 const routes = [
     {
@@ -40,10 +40,16 @@ const routes = [
         name: 'partidos',
         component: PartidosView,
     },
+    {
+        path: '/partido/:id',
+        name: 'PartidoDetailView',
+        component: PartidoDetailView,
+        props: true
+    },
 ];
 
 const router = createRouter({
-    history: createWebHistory(process.env.BASE_URL),
+    history: createWebHistory(),
     routes,
 });
 
