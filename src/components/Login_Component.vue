@@ -1,109 +1,109 @@
 <template>
     <div class="login-container">
-            <form @submit.prevent="login">
-                <input v-model="userData.name" type="text" placeholder="Nombre de usuario" required>
-                <input v-model="userData.password" type="password" placeholder="Contraseña" required>
-                <button type="submit">Iniciar Sesión</button>
-            </form>
-            <button @click="switchForm">¿No tienes cuenta? Regístrate</button>
-            <p v-if="error" class="error">{{ errorMessage }}</p>
-        </div>
-        <div v-else>
-            <!-- Formulario de Registro -->
-            <h2>Registro</h2>
-            <form @submit.prevent="register">
-                <input v-model="userData.name" type="text" placeholder="Nombre" required>
-                <input v-model="userData.email" type="email" placeholder="Email" required>
-                <input v-model="userData.password" type="password" placeholder="Contraseña" required>
-                <button type="submit">Registrarse</button>
-            </form>
-            <button @click="switchForm">¿Ya tienes cuenta? Inicia sesión</button>
-            <p v-if="error" class="error">{{ errorMessage }}</p>
-        </div>
+      <div v-if="showLoginForm">
+        <h2>Iniciar sesion</h2>
+        <form @submit.prevent="login">
+          <input v-model="userData.name" type="text" placeholder="Nombre de usuario" required>
+          <input v-model="userData.password" type="password" placeholder="Contraseña" required>
+          <button type="submit">Iniciar Sesión</button>
+        </form>
+        <button @click="switchForm">¿No tienes cuenta? Regístrate</button>
+        <p v-if="error" class="error">{{ errorMessage }}</p>
+      </div>
+      <div v-else>
+        <!-- Formulario de Registro -->
+        <h2>Registro</h2>
+        <form @submit.prevent="register">
+          <input v-model="userData.name" type="text" placeholder="Nombre" required>
+          <input v-model="userData.email" type="email" placeholder="Email" required>
+          <input v-model="userData.password" type="password" placeholder="Contraseña" required>
+          <button type="submit">Registrarse</button>
+        </form>
+        <button @click="switchForm">¿Ya tienes cuenta? Inicia sesión</button>
+        <p v-if="error" class="error">{{ errorMessage }}</p>
+      </div>
     </div>
-</template>
-
-<script>
-import { login, register } from '@/services/authService';
-
-export default {
+  </template>
+  
+  <script>
+  import { login, register } from '@/services/authService';
+  
+  export default {
     data() {
-        return {
-            userData: {
-                name: '',
-                email: '',
-                password: '',
-                rol: 2,
-            },
-            error: false,
-            errorMessage: '',
-            showLoginForm: true,
-        };
+      return {
+        userData: {
+          name: '',
+          email: '',
+          password: '',
+          rol: 2,
+        },
+        error: false,
+        errorMessage: '',
+        showLoginForm: true, // Inicializado en true para mostrar la página de inicio de sesión por defecto
+      };
     },
-
     methods: {
-        async login() {
-            if (this.validateForm()) {
-                try {
-                    const loginRequest = {
-                        UserName: this.userData.name,
-                        Password: this.userData.password,
-                    };
-                    const userResponse = await login(loginRequest);
-                    if (userResponse && userResponse.rol !== undefined) {
-                        localStorage.setItem('currentUser', JSON.stringify(userResponse));
-                        if (Number(userResponse.rol) === 1) {
-                            this.$router.push('/intranet');
-                        } else if (Number(userResponse.rol) === 2) {
-                            this.$router.push('/');
-                        }
-                    } else {
-                        this.error = true;
-                        this.errorMessage = 'Credenciales incorrectas.';
-                    }
-                } catch (error) {
-                    this.handleError(error);
-                }
+      async login() {
+        if (this.validateForm()) {
+          try {
+            const loginRequest = {
+              UserName: this.userData.name,
+              Password: this.userData.password,
+            };
+            const userResponse = await login(loginRequest);
+            if (userResponse && userResponse.rol !== undefined) {
+              localStorage.setItem('currentUser', JSON.stringify(userResponse));
+              if (Number(userResponse.rol) === 1) {
+                this.$router.push('/intranet');
+              } else if (Number(userResponse.rol) === 2) {
+                this.$router.push('/');
+              }
+            } else {
+              this.error = true;
+              this.errorMessage = 'Credenciales incorrectas.';
             }
-        },
-        async register() {
-            if (this.validateForm()) {
-                try {
-                    const userData = {
-                        UserName: this.userData.name,
-                        Email: this.userData.email,
-                        Password: this.userData.password,
-                        Rol: 2
-                    };
-                    await register(userData);
-                    alert('Registro exitoso, por favor inicie sesión.');
-                    this.switchForm(); // Cambia de nuevo al formulario de login
-                } catch (error) {
-                    this.handleError(error);
-                }
-            }
-        },
-        switchForm() {
-            this.showLoginForm = !this.showLoginForm;
-        },
-        validateForm() {
-            if (!this.userData.name || !this.userData.password || (!this.showLoginForm && !this.userData.email)) {
-                this.error = true;
-                this.errorMessage = 'Todos los campos son obligatorios.';
-                return false;
-            }
-            this.error = false;
-            return true;
-        },
-        handleError(error) {
-            this.error = true;
-            this.errorMessage = 'Error al procesar la solicitud: ' + (error.response && error.response.data.message || 'Un error ha ocurrido');
-            console.error('Error:', error);
+          } catch (error) {
+            this.handleError(error);
+          }
         }
+      },
+      async register() {
+        if (this.validateForm()) {
+          try {
+            const userData = {
+              UserName: this.userData.name,
+              Email: this.userData.email,
+              Password: this.userData.password,
+              Rol: 2
+            };
+            await register(userData);
+            alert('Registro exitoso, por favor inicie sesión.');
+            this.switchForm(); // Cambia de nuevo al formulario de login
+          } catch (error) {
+            this.handleError(error);
+          }
+        }
+      },
+      switchForm() {
+        this.showLoginForm = !this.showLoginForm;
+      },
+      validateForm() {
+        if (!this.userData.name || !this.userData.password || (!this.showLoginForm && !this.userData.email)) {
+          this.error = true;
+          this.errorMessage = 'Todos los campos son obligatorios.';
+          return false;
+        }
+        this.error = false;
+        return true;
+      },
+      handleError(error) {
+        this.error = true;
+        this.errorMessage = 'Error al procesar la solicitud: ' + (error.response && error.response.data.message || 'Un error ha ocurrido');
+        console.error('Error:', error);
+      }
     },
-}
-</script>
-
+  }
+  </script>
 <style scoped>
 .form-container {
     display: flex;
