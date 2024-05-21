@@ -22,7 +22,7 @@ async function register(userData) {
             UserName: userData.UserName,
             Email: userData.Email,
             Password: userData.Password,
-            Rol: userData.Rol === 'Admin' ? 1 : 2,
+            Rol: userData.Rol === 'Admin' ? 1 : userData.Rol === 'Owner' ? 2 : 3, 
             Reservas: []
         };
         const response = await axios.post(`${API_URL}`, payload);
