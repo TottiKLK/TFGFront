@@ -1,0 +1,19 @@
+{
+  "navbar": {
+    "home": "INICIO",
+    "products": "PRODUCTOS",
+    "tracks": "PISTAS",
+    "matches": "PARTIDOS",
+    "profile": "PERFIL"
+  },
+  "home": {
+    "discover": "Descubre Más Sobre Nosotros",
+    "aboutUs": "En PadelIM, unimos pasión y tecnología para ofrecerte la mejor experiencia en el pádel.",
+    "trackReservation": "Reserva de Pistas",
+    "trackExperience": "Experimenta el juego en pistas de primera calidad donde cada punto se siente como un campeonato.",
+    "proRackets": "Palas Profesionales",
+    "findYourRacket": "Encuentra tu pala ideal, diseñada con la más alta tecnología y pensada para cada estilo de jugador.",
+    "innovativeAccessories": "Accesorios Innovadores",
+    "improveYourGame": "Mejora tu juego con nuestros accesorios, desde overgrips hasta pelotas diseñadas para ofrecer el máximo rendimiento."
+  }
+}

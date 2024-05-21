@@ -8,13 +8,14 @@ import SobreNosotros from '@/views/SobreNosotros_View.vue';
 import Products from '@/views/Products_View.vue';
 import PartidosView from '@/views/Partidos_View.vue';
 import PartidoDetailView from '@/views/PartidoDetail_View.vue';
+import i18n from './i18n';
 
 const routes = [
     {
         path: '/',
         name: 'homeview',
         component: HomeView
-    },
+    }, 
     {
         path: '/reservas',
         name: 'reservas',
@@ -56,5 +57,5 @@ const router = createRouter({
 const app = createApp(App);
 
 app.use(router);
-
+app.use(i18n);
 app.mount('#app');

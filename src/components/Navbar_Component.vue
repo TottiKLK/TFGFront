@@ -4,11 +4,17 @@
             <img src="@/assets/logo.png" alt="Logo" />
         </div>
         <div class="navbar-menu" v-bind:class="{ active: menuVisible }" v-show="!isMobile || menuVisible">
-            <router-link to="/" class="navbar-item">INICIO</router-link>
-            <router-link to="/Products" class="navbar-item">PRODUCTOS</router-link>
-            <router-link to="/reservas" class="navbar-item">PISTAS</router-link>
-            <router-link to="/partidos" class="navbar-item">PARTIDOS</router-link>
-            <router-link to="/perfil" class="navbar-item">PERFIL</router-link>
+            <router-link to="/" class="navbar-item">{{ $t('navbar.home') }}</router-link>
+            <router-link to="/Products" class="navbar-item">{{ $t('navbar.products') }}</router-link>
+            <router-link to="/reservas" class="navbar-item">{{ $t('navbar.tracks') }}</router-link>
+            <router-link to="/partidos" class="navbar-item">{{ $t('navbar.matches') }}</router-link>
+            <router-link to="/perfil" class="navbar-item">{{ $t('navbar.profile') }}</router-link>
+            <div class="language-selector">
+                <select v-model="currentLocale" @change="changeLocale">
+                    <option value="en">Español</option>
+                    <option value="es">English</option>
+                </select>
+            </div>
         </div>
         <div class="navbar-toggler-container" v-if="isMobile" @click="toggleMenu">
             <button class="navbar-toggler">
@@ -26,6 +32,7 @@ export default {
             isMobile: false,
             menuVisible: false,
             windowWidth: window.innerWidth,
+            currentLocale: this.$i18n.locale,
         }
     },
     mounted() {
@@ -43,12 +50,36 @@ export default {
         toggleMenu() {
             this.menuVisible = !this.menuVisible;
             console.log('Menu toggled. Menu visible:', this.menuVisible);
+        },
+        changeLocale() {
+            this.$i18n.locale = this.currentLocale;
         }
     }
 }
 </script>
 
 <style scoped>
+.flag-icon {
+    cursor: pointer;
+    width: 30px;
+    height: 20px;
+    margin: 0 5px;
+    border: 2px solid transparent;
+}
+
+.flag-icon.active {
+    border-color: #555;
+}
+
+.language-selector {
+    display: flex;
+    align-items: center;
+}
+
+.mobile-language-selector {
+    display: none;
+}
+
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -86,7 +117,7 @@ export default {
     }
 }
 
-.imagenCarrito{
+.imagenCarrito {
     width: 30px;
     height: 30px;
 }
@@ -166,6 +197,17 @@ export default {
 }
 
 @media (max-width: 768px) {
+    .lenguage-selector {
+        padding-bottom: 2%;
+    }
+
+    .mobile-language-selector {
+        display: block;
+        /* Muestra el selector dentro del menú */
+        padding: 10px;
+        width: 100%;
+    }
+
     .navbar {
         flex-direction: row;
         justify-content: space-between;

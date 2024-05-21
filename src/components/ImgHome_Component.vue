@@ -12,32 +12,29 @@
     <div class="about-us-container">
         <Navbar_Component />
         <div class="header">
-            <h1>Descubre Más Sobre Nosotros</h1>
-            <p>En PadelIM, unimos pasión y tecnología para ofrecerte la mejor experiencia en el pádel.</p>
+            <h1>{{$t('home.discover')}}</h1>
+                <p>{{$t('home.aboutUs')}}</p>
         </div>
         <div class="content">
             <div class="section">
                 <img src="../assets/1.png" alt="Pista de Pádel" class="image">
                 <div class="text">
-                    <h2>Reserva de Pistas</h2>
-                    <p>Experimenta el juego en pistas de primera calidad donde cada punto se siente como un campeonato.
-                    </p>
+                    <h2>{{$t('home.trackReservation')}}</h2>
+                    <p>{{$t('home.trackExperience')}}</p>
                 </div>
             </div>
             <div class="section reverse">
                 <img src="../assets/2.png" alt="Pala de Pádel" class="image">
                 <div class="text">
-                    <h2>Palas Profesionales</h2>
-                    <p>Encuentra tu pala ideal, diseñada con la más alta tecnología y pensada para cada estilo de
-                        jugador.</p>
+                    <h2>{{$t('home.proRackets')}}</h2>
+                    <p>{{$t('home.findYourRacket')}}</p>
                 </div>
             </div>
             <div class="section">
                 <img src="../assets/3.png" alt="Accesorios de Pádel" class="image">
                 <div class="text">
-                    <h2>Accesorios Innovadores</h2>
-                    <p>Mejora tu juego con nuestros accesorios, desde overgrips hasta pelotas diseñadas para ofrecer el
-                        máximo rendimiento.</p>
+                    <h2>{{$t('home.innovativeAccessories')}}</h2>
+                    <p>{{$t('home.improveYourGame')}}</p>
                 </div>
             </div>
         </div>
