@@ -11,7 +11,7 @@
             <router-link to="/perfil" class="navbar-item">{{ $t('navbar.profile') }}</router-link>
             <div class="language-selector">
                 <select v-model="currentLocale" @change="changeLocale">
-                    <option value="en">Español</option>
+                    <option value="en">Español</option>ç
                     <option value="es">English</option>
                 </select>
             </div>

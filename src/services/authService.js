@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5224/Usuario';
+const API_URL = 'http://localhost:5025/Usuario';
 
 async function login(loginData) {
     try {
-        const API_URL = 'http://localhost:5224/UsuarioLogin/Login';
+        const API_URL = 'http://localhost:5025/UsuarioLogin/login';
         const response = await axios.post(API_URL, loginData);
         return response.data;
     } catch (error) {

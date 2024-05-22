@@ -58,7 +58,7 @@ export default {
             } else if (Number(userResponse.rol) === 2) {
               this.$router.push('/intranetOwner');
             } else if (Number(userResponse.rol) == 3) {
-              this.$router.push('/')
+              this.$router.push('/');
             }
           } else {
             this.error = true;
