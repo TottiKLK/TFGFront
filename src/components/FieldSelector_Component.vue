@@ -2,11 +2,13 @@
   <div class="container">
     <h1>Zona de Partidos</h1>
     <div class="partidos-grid">
-      <div class="partido-card" v-for="(match, index) in matches" :key="index">
-        <img :src="require(`@/assets/${match.image}`)" alt="Imagen del partido" class="partido-image" />
-        <h2>{{ match.title }}</h2>
+      <div class="partido-card" v-for="(match, index) in partidos" :key="index">
+        <h2>{{ match.name }}</h2>
         <p>{{ match.description }}</p>
-        <router-link :to="{ name: 'PartidoDetailView', params: { id: index } }">
+        <p>Duración: {{ match.duration }}</p>
+        <p>Fecha: {{ new Date(match.date).toLocaleString() }}</p>
+        <p>Estrellas: {{ match.estrellas }}</p>
+        <router-link :to="{ name: 'PartidoDetailView', params: { id: match.idPartido } }">
           <button>Ver detalle del partido</button>
         </router-link>
       </div>
@@ -14,23 +16,32 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue';
+<script>
+import { ref, onMounted } from 'vue';
+import { fetchPartidos } from '@/services/partidosService';
 
-const matches = ref([
-  { title: 'Partido 1', description: 'Descripción del Partido 1', image: 'p1.jpg' },
-  { title: 'Partido 2', description: 'Descripción del Partido 2', image: 'p2.jpg' },
-  { title: 'Partido 3', description: 'Descripción del Partido 3', image: 'p3.jpg' },
-  { title: 'Partido 4', description: 'Descripción del Partido 4', image: 'p1.jpg' },
-  // Añadir más partidos según sea necesario
-]);
+export default {
+  name: 'ZonaPartidos',
+  setup() {
+    const partidos = ref([]);
+
+    onMounted(async () => {
+      partidos.value = await fetchPartidos();
+    });
+
+    return { partidos };
+  }
+};
 </script>
 
 <style scoped>
 .container {
-  margin-top: 5%;
+  width: 80%;
+  margin: auto;
+  overflow: hidden;
   text-align: center;
   padding: 20px;
+  margin-top: 9%;
 }
 
 .partidos-grid {
@@ -46,12 +57,6 @@ const matches = ref([
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: left;
-}
-
-.partido-image {
-  width: 100%;
-  height: auto;
-  border-radius: 10px;
 }
 
 button {

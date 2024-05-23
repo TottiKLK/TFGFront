@@ -1,75 +1,78 @@
 <template>
-    <div class="container">
-        <div class="zona-partidos">
-            <div class="card" v-for="index in 8" :key="index">
-                <h3>Pista {{ index }}</h3>
-                <p>Court Reservation</p>
-                <button>Reservar</button>
-                <div class="svg-container">
-                    <svg width="250" height="150" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Fondo de la pista -->
-                        <rect width="250" height="150" fill="forestgreen" stroke="black" stroke-width="15" />
-                        <!-- Líneas de la pista -->
-                        <!-- Línea central -->
-                        <line x1="125" y1="9" x2="125" y2="141" stroke="red" stroke-width="3" />
-                        <!-- Líneas de servicio -->
-                        <line x1="40" y1="75" x2="210" y2="75" stroke="white" stroke-width="3" />
-                        <line x1="40" y1="9" x2="40" y2="141" stroke="white" stroke-width="3" />
-                        <line x1="210" y1="9" x2="210" y2="141" stroke="white" stroke-width="3" />
-                    </svg>
-                </div>
-            </div>
-        </div>
+  <div class="container">
+    <h1>{{ partido.name }}</h1>
+    <p>{{ partido.description }}</p>
+    <div class="details">
+      <div class="svg-container">
+        <!-- SVG específico del partido -->
+        <svg width="312" height="210" viewBox="0 0 312 210" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="312" height="210" fill="white"/>
+          <rect x="7" y="7" width="298" height="196" stroke="black" stroke-width="2"/>
+          <line x1="57" y1="8" x2="57" y2="202" stroke="black" stroke-width="2"/>
+          <line x1="56" y1="105" x2="258" y2="105" stroke="black" stroke-width="2"/>
+          <line x1="257" y1="8" x2="257" y2="202" stroke="black" stroke-width="2"/>
+          <line x1="158" y1="-1.74846e-07" x2="158" y2="210" stroke="black" stroke-width="4"/>
+        </svg>
+      </div>
     </div>
+    <button @click="goBack">Volver</button>
+  </div>
 </template>
 
 <script>
+import { ref, onMounted } from 'vue';
+import { fetchPartidos } from '@/services/partidosService';
+
 export default {
-    name: 'ZonaPartidos'
-}
+  name: 'PartidoDetailView',
+  setup() {
+    const partido = ref({});
+
+    onMounted(async () => {
+      const partidos = await fetchPartidos();
+      const id = parseInt(this.$route.params.id);
+      partido.value = partidos.find(p => p.idPartido === id);
+    });
+
+    const goBack = () => {
+      this.$router.push({ name: 'ZonaPartidos' });
+    };
+
+    return { partido, goBack };
+  }
+};
 </script>
 
 <style scoped>
 .container {
-    width: 80%;
-    margin: auto;
-    overflow: hidden;
+  text-align: center;
+  padding: 20px;
 }
 
-.zona-partidos {
-    text-align: center;
-    margin: 20px 0;
-}
-
-.card {
-    display: inline-block;
-    background-color: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin: 10px;
-    padding: 20px;
-    width: calc(25% - 40px);
-    box-sizing: border-box;
-    vertical-align: top;
-}
-
-.card h3 {
-    margin: 0 0 10px;
-}
-
-.card button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-}
-
-.card button:hover {
-    background-color: #45a049;
+.details {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 20px;
 }
 
 .svg-container {
-    text-align: center;
-    margin: 20px 0;
+  width: 312px;
+  height: 210px;
+  margin-top: 20px;
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
 }
 </style>

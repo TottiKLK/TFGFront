@@ -1,21 +1,20 @@
 <template>
-  <div class="card" v-if="match">
-    <h1>{{ match.title }}</h1>
-    <p>{{ match.description }}</p>
+  <div class="card" v-if="partido">
+    <h1>{{ partido.name }}</h1>
+    <p>{{ partido.description }}</p>
     <div class="content-wrapper">
-      <img :src="require(`@/assets/${match.image}`)" alt="Imagen del partido" class="partido-image" />
       <div class="field-wrapper">
         <Field_Component />
         <div class="fieldgrid">
           <div v-for="(availablePosition, index) in availablePositions" :key="index" class="fielditem">
             <Player_Component @toggle="() => changeSelected(index)"
-              :isSelected="selectedPlayer === index" :notAvailable="availablePosition" />
+              :isSelected="selectedPlayer === index" :notAvailable="!availablePosition" />
           </div>
         </div>
       </div>
     </div>
     <div class="buttons">
-      <button class="reserve-button">Reservar</button>
+      <button class="reserve-button" @click="reservePosition">Reservar</button>
       <router-link to="/partidos">
         <button class="back-button">Volver</button>
       </router-link>
@@ -30,34 +29,64 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import axios from 'axios';
 import Field_Component from '@/components/Field_Component.vue';
 import Player_Component from '@/components/Player_Component.vue';
 
 const route = useRoute();
-const matchId = computed(() => parseInt(route.params.id, 10)); // Asegúrate de que es un número
-
-const matches = ref([
-  { title: 'Partido 1', description: 'Descripción del Partido 1', image: 'p1.jpg' },
-  { title: 'Partido 2', description: 'Descripción del Partido 2', image: 'p2.jpg' },
-  { title: 'Partido 3', description: 'Descripción del Partido 3', image: 'p3.jpg' },
-  { title: 'Partido 4', description: 'Descripción del Partido 4', image: 'p1.jpg' },
-  // Añadir más partidos según sea necesario
-]);
-
-const match = computed(() => matches.value[matchId.value]);
-
-const availablePositions = ref([true, true, false, false]);
+const partidoId = computed(() => parseInt(route.params.id, 10));
+const partido = ref(null);
+const availablePositions = ref([true, true, true, true]); // Initially all positions are available
 const selectedPlayer = ref(null);
 
-function changeSelected(index) {
-  if (selectedPlayer.value === index) {
-    selectedPlayer.value = null;
-  } else {
-    selectedPlayer.value = index;
+const fetchPartidoDetails = async () => {
+  try {
+    const response = await axios.get(`http://localhost:5025/Partido/${partidoId.value}`);
+    partido.value = response.data;
+    if (partido.value && partido.value.positions) {
+      console.log(partido.value.positions); // Añadir este log para verificar los datos
+      // Assuming partido.value has an array `positions` indicating the availability
+      availablePositions.value = [true, true, true, true]; // Reset the positions
+      partido.value.positions.forEach(pos => {
+        availablePositions.value[pos.index] = !pos.ocupado;
+      });
+    } else {
+      console.error('No positions found in the response.');
+    }
+  } catch (error) {
+    console.error('Error fetching partido details:', error);
   }
+};
+
+const reservePosition = async () => {
+  if (selectedPlayer.value === null) {
+    alert('Seleccione una posición para reservar.');
+    return;
+  }
+  try {
+    const userId = 1; // Replace with the actual user ID
+    await axios.post(`http://localhost:5025/Partido/${partidoId.value}/usuarios/${userId}`, {
+      position: selectedPlayer.value
+    });
+    alert('Reserva realizada con éxito.');
+    await fetchPartidoDetails(); // Refresh the details to update the UI
+  } catch (error) {
+    console.error('Error reserving position:', error);
+    alert('Error al reservar la posición.');
+  }
+};
+
+function changeSelected(index) {
+  if (!availablePositions.value[index]) {
+    alert('Esta posición ya está ocupada.');
+    return;
+  }
+  selectedPlayer.value = selectedPlayer.value === index ? null : index;
 }
+
+onMounted(fetchPartidoDetails);
 </script>
 
 <style scoped>
@@ -110,8 +139,8 @@ body {
 /* Field Wrapper Styles */
 .field-wrapper {
   position: relative;
-  width: 312px; /* Ajusta el tamaño según sea necesario */
-  height: 210px; /* Ajusta el tamaño según sea necesario */
+  width: 312px;
+  height: 210px;
 }
 
 /* Field Grid Styles */
@@ -174,20 +203,5 @@ p {
   font-size: 1.5rem;
   color: #555;
   margin-bottom: 20px;
-}
-
-/* Image Styles */
-.partido-image {
-  width: 312px; /* Ajusta el tamaño según sea necesario */
-  height: 210px; /* Ajusta el tamaño según sea necesario */
-  object-fit: cover;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.partido-image:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 </style>
