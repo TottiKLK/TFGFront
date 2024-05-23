@@ -8,10 +8,10 @@
             <router-link to="/Products" class="navbar-item">{{ $t('navbar.products') }}</router-link>
             <router-link to="/reservas" class="navbar-item">{{ $t('navbar.tracks') }}</router-link>
             <router-link to="/partidos" class="navbar-item">{{ $t('navbar.matches') }}</router-link>
-            <router-link to="/perfil" class="navbar-item">{{ $t('navbar.profile') }}</router-link>
+            <router-link :to="profileLink" class="navbar-item">{{ $t('navbar.profile') }}</router-link>
             <div class="language-selector">
                 <select v-model="currentLocale" @change="changeLocale">
-                    <option value="en">Español</option>ç
+                    <option value="en">Español</option>
                     <option value="es">English</option>
                 </select>
             </div>
@@ -35,13 +35,32 @@ export default {
             currentLocale: this.$i18n.locale,
         }
     },
+    computed: {
+        profileLink() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                if (currentUser.rol === 1) {
+                    return '/intranet';
+                } else if (currentUser.rol === 2) {
+                    return '/intranetOwner';
+                } else {
+                    return '/userprofile';
+                }
+            } else {
+                return '/perfil';
+            }
+        },
+        isLoggedIn() {
+            return !!localStorage.getItem('currentUser');
+        }
+    },
     mounted() {
         console.log('Component mounted. Current width:', window.innerWidth);
         this.updateIsMobile();
         window.addEventListener('resize', this.updateIsMobile);
     },
     beforeUnmount() {
-        window.removeEventListener('resize', this.updateIsMobile)
+        window.removeEventListener('resize', this.updateIsMobile);
     },
     methods: {
         updateIsMobile() {
@@ -57,7 +76,6 @@ export default {
     }
 }
 </script>
-
 <style scoped>
 .flag-icon {
     cursor: pointer;

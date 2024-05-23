@@ -126,7 +126,6 @@ export default {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: none;
-    margin: 20px 0;
 }
 
 .usuario-form .form-row,

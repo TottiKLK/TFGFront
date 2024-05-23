@@ -5,38 +5,34 @@ const API_URL = 'http://localhost:5025/Usuario';
 const userService = {
     async getUsers() {
         try {
-            const response = await axios.get(`${API_URL}`);
-            console.log("Usuarios cargados:", response.data);  
+            const response = await axios.get(API_URL);
+            console.log("Usuarios cargados:", response.data);
             return response.data;
         } catch (error) {
             handleError(error);
         }
     },
-
 
     async createUser(userData) {
+        if (!userData.userName || !userData.email || !userData.password || !userData.rol) {
+            console.error("Todos los campos son obligatorios");
+            return;
+        }
+
+        const formattedData = {
+            userName: userData.userName,
+            email: userData.email,
+            password: userData.password,
+            rol: Number(userData.rol)
+        };
+
         try {
-            // Asegúrate de que todos los campos requeridos están presentes
-            if (!userData.nombre || !userData.email || !userData.password || !userData.rol) {
-                console.error("Todos los campos son obligatorios");
-                return;  // Detener la ejecución si algún campo requerido está vacío
-            }
-    
-            // Formatear los datos correctamente
-            const formattedData = {
-                userName: userData.nombre,  // Asegúrate de que el nombre de la propiedad coincide con el backend
-                email: userData.email,
-                password: userData.password,
-                rol: Number(userData.rol)  // Convertir el rol a número si es necesario
-            };
-    
-            const response = await axios.post(`${API_URL}`, formattedData);
+            const response = await axios.post(API_URL, formattedData);
             return response.data;
         } catch (error) {
             handleError(error);
         }
     },
-    
 
     async updateUser(userId, userData) {
         try {
@@ -55,6 +51,30 @@ const userService = {
             handleError(error);
         }
     },
+    
+    async getUserPurchases(userId) {
+        try {
+            const response = await axios.get(`${API_URL}/${userId}/compras`);
+            return response.data; // Devolver directamente los datos de la respuesta
+        } catch (error) {
+            handleError(error);
+        }
+    },
+
+    async buyProducts(purchaseData) {
+        try {
+            const response = await axios.post(`${API_URL}/comprar`, {
+                idUser: purchaseData.userId,
+                productos: purchaseData.productos.map(product => ({
+                    idProducto: product.productId,
+                    cantidad: product.quantity
+                }))
+            });
+            return response.data;
+        } catch (error) {
+            handleError(error);
+        }
+    }
 };
 
 function handleError(error) {

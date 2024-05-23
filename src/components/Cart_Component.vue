@@ -12,12 +12,15 @@
                     <p>{{ product.description }}</p>
                     <div class="cart-item-actions">
                         <p>Cantidad: {{ product.quantity }}</p>
+                        <p>Precio: {{ product.price }}€</p>
                         <button @click="removeFromCart(index)" class="remove-product-button">Eliminar</button>
                     </div>
                 </div>
             </li>
         </ul>
         <p v-else class="empty-cart-message">El carrito está vacío</p>
+        <p v-if="cart.length > 0" class="total-price">Total: {{ total }}€</p>
+        <button v-if="cart.length > 0" @click="buyProducts" class="buy-button">Comprar</button>
     </div>
 </template>
 
@@ -27,12 +30,27 @@ export default {
     props: {
         cart: Array
     },
+    computed: {
+        total() {
+            return this.cart.reduce((sum, product) => sum + product.price * product.quantity, 0);
+        }
+    },
     methods: {
         toggleCart() {
             this.$emit('toggle-cart');
         },
         removeFromCart(index) {
             this.$emit('remove-from-cart', index);
+        },
+        async buyProducts() {
+            try {
+                await this.$emit('buy-products');
+                alert('Compra realizada con éxito');
+                this.toggleCart();
+            } catch (error) {
+                console.error('Error al realizar la compra:', error);
+                alert('Error al realizar la compra');
+            }
         }
     }
 };
@@ -50,8 +68,8 @@ export default {
     padding: 1rem;
     border-radius: 10px;
     z-index: 1000;
-    max-height: 500px; /* Limits the total height of the cart */
-    overflow-y: auto;  /* Adds vertical scroll */
+    max-height: 500px;
+    overflow-y: auto;
 }
 
 .cart-header {
@@ -151,6 +169,31 @@ export default {
 }
 
 .remove-product-button:hover {
+    background-color: #c65d2d;
+}
+
+.total-price {
+    font-size: 1.25rem;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.buy-button {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    background-color: #e27635;
+    color: #ffffff;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-top: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.buy-button:hover {
     background-color: #c65d2d;
 }
 

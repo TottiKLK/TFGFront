@@ -1,9 +1,10 @@
 <template>
   <div class="login-container">
     <div v-if="showLoginForm">
-      <h2>Iniciar sesion</h2>
+      <h2>Iniciar sesión</h2>
       <form @submit.prevent="login">
         <input v-model="userData.name" type="text" placeholder="Nombre de usuario" required>
+        <input v-model="userData.email" type="email" placeholder="Correo electrónico" required>
         <input v-model="userData.password" type="password" placeholder="Contraseña" required>
         <button type="submit">Iniciar Sesión</button>
       </form>
@@ -11,7 +12,6 @@
       <p v-if="error" class="error">{{ errorMessage }}</p>
     </div>
     <div v-else>
-      <!-- Formulario de Registro -->
       <h2>Registro</h2>
       <form @submit.prevent="register">
         <input v-model="userData.name" type="text" placeholder="Nombre" required>
@@ -39,7 +39,7 @@ export default {
       },
       error: false,
       errorMessage: '',
-      showLoginForm: true, // Inicializado en true para mostrar la página de inicio de sesión por defecto
+      showLoginForm: true,
     };
   },
   methods: {
@@ -48,18 +48,13 @@ export default {
         try {
           const loginRequest = {
             UserName: this.userData.name,
+            Email: this.userData.email,
             Password: this.userData.password,
           };
           const userResponse = await login(loginRequest);
           if (userResponse && userResponse.rol !== undefined) {
             localStorage.setItem('currentUser', JSON.stringify(userResponse));
-            if (Number(userResponse.rol) === 1) {
-              this.$router.push('/intranet');
-            } else if (Number(userResponse.rol) === 2) {
-              this.$router.push('/intranetOwner');
-            } else if (Number(userResponse.rol) == 3) {
-              this.$router.push('/');
-            }
+            this.redirectUser(userResponse.rol);
           } else {
             this.error = true;
             this.errorMessage = 'Credenciales incorrectas.';
@@ -80,7 +75,7 @@ export default {
           };
           await register(userData);
           alert('Registro exitoso, por favor inicie sesión.');
-          this.switchForm(); // Cambia de nuevo al formulario de login
+          this.switchForm();
         } catch (error) {
           this.handleError(error);
         }
@@ -90,7 +85,7 @@ export default {
       this.showLoginForm = !this.showLoginForm;
     },
     validateForm() {
-      if (!this.userData.name || !this.userData.password || (!this.showLoginForm && !this.userData.email)) {
+      if (!this.userData.name || !this.userData.email || !this.userData.password) {
         this.error = true;
         this.errorMessage = 'Todos los campos son obligatorios.';
         return false;
@@ -102,10 +97,26 @@ export default {
       this.error = true;
       this.errorMessage = 'Error al procesar la solicitud: ' + (error.response && error.response.data.message || 'Un error ha ocurrido');
       console.error('Error:', error);
+    },
+    redirectUser(rol) {
+      switch (rol) {
+        case 1:
+          this.$router.push('/intranet');
+          break;
+        case 2:
+          this.$router.push('/intranetOwner');
+          break;
+        case 3:
+          this.$router.push('/');
+          break;
+        default:
+          this.$router.push('/');
+      }
     }
-  },
+  }
 }
 </script>
+
 <style scoped>
 .form-container {
   display: flex;

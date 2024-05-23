@@ -9,7 +9,8 @@ import Products from '@/views/Products_View.vue';
 import PartidosView from '@/views/Partidos_View.vue';
 import PartidoDetailView from '@/views/PartidoDetail_View.vue';
 import Intranet from '@/views/Intranet_View.vue';
-import UsuarioIntranet from './views/UsuarioIntranet_View.vue';
+import UsuarioIntranet from '@/views/UsuarioIntranet_View.vue';
+import UserProfile from '@/views/UserProfile_View.vue';
 import i18n from './i18n';
 
 const routes = [
@@ -58,6 +59,11 @@ const routes = [
         path: '/usuariointranet',
         name: 'UsuarioIntranet',
         component: UsuarioIntranet,
+    },
+    {
+        path: '/userprofile',
+        name: 'UserProfile',
+        component: UserProfile,
     },
 ];
 
