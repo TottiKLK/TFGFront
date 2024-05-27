@@ -45,3 +45,33 @@ export async function reservePosition(partidoId, usuarioId, position) {
     throw error;
   }
 }
+
+export async function createPartido(partido) {
+  try {
+    const response = await axios.post(`${API_URL}/Partido`, partido);
+    return response.data;
+  } catch (error) {
+    console.error('Error al crear el partido:', error);
+    throw error;
+  }
+}
+
+export async function updatePartido(id, partido) {
+  try {
+    const response = await axios.put(`${API_URL}/Partido/${id}`, partido);
+    return response.data;
+  } catch (error) {
+    console.error('Error al actualizar el partido:', error);
+    throw error;
+  }
+}
+
+export async function deletePartido(id) {
+  try {
+    const response = await axios.delete(`${API_URL}/Partido/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error al eliminar el partido:', error);
+    throw error;
+  }
+}

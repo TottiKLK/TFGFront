@@ -9,7 +9,8 @@
 import { ref, onMounted } from 'vue';
 import LeftMenu from '@/components/LeftMenu_Component.vue';
 import DashboardPanelProductos from '@/components/DashboardPanelProductos_Component.vue';
-import { productsService } from '@/services/productsService.js';
+import { getProducts  } from '@/services/productsService.js';
+
 
 export default {
     name: 'ProductoIntranetView',
@@ -23,7 +24,7 @@ export default {
 
         const loadProductos = async () => {
             try {
-                productos.value = await productsService.getProducts();
+                productos.value = await getProducts();
             } catch (e) {
                 error.value = e.message;
             }

@@ -2,16 +2,13 @@
     <div class="ds-left-menu">
         <div class="ds-perfil">
             <div class="info-perfil">
-                <span>Admin</span>
+                <span>Owner</span>
             </div>
         </div>
 
         <div class="ds-menu">
             <ul>
-                <li><router-link to="/usuariointranet">Usuario</router-link></li>
-                <li><router-link to="/productointranet">Productos</router-link></li>
-                <li><router-link to="/pistaintranet">Pistas</router-link></li>
-                <li><router-link to="/sesionintranet">Sesiones</router-link></li> <!-- Nueva opción para Sesiones -->
+                <li><router-link to="/partidointranetView">Partidos</router-link></li>
             </ul>
         </div>
 
@@ -27,7 +24,7 @@
 import { useRouter } from 'vue-router';
 
 export default {
-    name: 'LeftMenu',
+    name: 'LeftMenuOwner',
     setup() {
         const router = useRouter();
 

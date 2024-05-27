@@ -11,7 +11,11 @@ import PartidoDetailView from '@/views/PartidoDetail_View.vue';
 import Intranet from '@/views/Intranet_View.vue';
 import UsuarioIntranet from '@/views/UsuarioIntranet_View.vue';
 import UserProfile from '@/views/UserProfile_View.vue';
-import ProductoIntranet from '@/views/ProductoIntranetView.vue'
+import ProductoIntranet from '@/views/ProductoIntranetView.vue';
+import PistaIntranet from '@/views/PistaIntranetView.vue';
+import SesionIntranet from '@/views/SesionIntranetView.vue';
+import PartidoIntranetView from '@/views/PartidoIntranetView.vue';
+import IntranetOwner from '@/views/IntranetOwner_View.vue';
 import i18n from './i18n';
 
 const routes = [
@@ -70,6 +74,26 @@ const routes = [
         path: '/productointranet',
         name: 'ProductoIntranet',
         component: ProductoIntranet,
+    },
+    {
+        path: '/pistaintranet',
+        name: 'PistaIntranet',
+        component: PistaIntranet,
+    },
+    {
+        path: '/sesionintranet',
+        name: 'SesionIntranet',
+        component: SesionIntranet,
+    },
+    {
+        path: '/partidointranetView',
+        name: 'PartidoIntranetView ',
+        component: PartidoIntranetView ,
+    },
+    {
+        path: '/intranetowner',
+        name: 'IntranetOwner ',
+        component: IntranetOwner ,
     },
 ];
 
