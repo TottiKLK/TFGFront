@@ -3,54 +3,56 @@
         <h1 class="title">Nuestros Productos</h1>
         <nav class="products-nav">
             <button v-for="category in categories" :key="category" :class="{ active: activeCategory === category }"
-                @click="activeCategory = category">
+                @click="setActiveCategory(category)">
                 {{ category }}
             </button>
             <img class="cart-icon" @click="toggleCart" src="@/assets/imagen_carrito.png" alt="Carrito de compras">
         </nav>
         <div class="products-display">
             <div v-show="activeCategory === 'Palas'" class="product-category">
-                <div class="product-card" v-for="product in palas" :key="product.id">
-                    <img :src="product.image" :alt="product.name" class="product-image" />
+                <div class="product-card" v-for="product in filteredProducts.palas" :key="product.idProduct">
+                    <img :src="product.product_Image" :alt="product.name_Product" class="product-image" />
                     <div class="product-info">
-                        <h3 class="product-name">{{ product.name }}</h3>
-                        <p class="product-description">{{ product.description }}</p>
-                        <p class="product-price">{{ product.price }}€</p>
+                        <h3 class="product-name">{{ product.name_Product }}</h3>
+                        <p class="product-description">{{ product.product_Description }}</p>
+                        <p class="product-price">{{ product.product_Price }}€</p>
                         <button @click="addToCart(product)" class="product-button">Añadir al carrito</button>
                     </div>
                 </div>
             </div>
             <div v-show="activeCategory === 'Accesorios'" class="product-category">
-                <div class="product-card" v-for="product in accesorios" :key="product.id">
-                    <img :src="product.image" :alt="product.name" class="product-image" />
+                <div class="product-card" v-for="product in filteredProducts.accesorios" :key="product.idProduct">
+                    <img :src="product.product_Image" :alt="product.name_Product" class="product-image" />
                     <div class="product-info">
-                        <h3 class="product-name">{{ product.name }}</h3>
-                        <p class="product-description">{{ product.description }}</p>
-                        <p class="product-price">{{ product.price }}€</p>
+                        <h3 class="product-name">{{ product.name_Product }}</h3>
+                        <p class="product-description">{{ product.product_Description }}</p>
+                        <p class="product-price">{{ product.product_Price }}€</p>
                         <button @click="addToCart(product)" class="product-button">Añadir al carrito</button>
                     </div>
                 </div>
             </div>
             <div v-show="activeCategory === 'Ropa'" class="product-category">
-                <div class="product-card" v-for="product in ropa" :key="product.id">
-                    <img :src="product.image" :alt="product.name" class="product-image" />
+                <div class="product-card" v-for="product in filteredProducts.ropa" :key="product.idProduct">
+                    <img :src="product.product_Image" :alt="product.name_Product" class="product-image" />
                     <div class="product-info">
-                        <h3 class="product-name">{{ product.name }}</h3>
-                        <p class="product-description">{{ product.description }}</p>
-                        <p class="product-price">{{ product.price }}€</p>
+                        <h3 class="product-name">{{ product.name_Product }}</h3>
+                        <p class="product-description">{{ product.product_Description }}</p>
+                        <p class="product-price">{{ product.product_Price }}€</p>
                         <button @click="addToCart(product)" class="product-button">Añadir al carrito</button>
                     </div>
                 </div>
             </div>
         </div>
         <div v-if="showMessage" class="message">{{ message }}</div>
-        <CartComponent :cart="cart" v-if="cartVisible" @toggle-cart="toggleCart" @remove-from-cart="removeFromCart" @buy-products="buyProducts"/>
+        <CartComponent :cart="cart" v-if="cartVisible" @toggle-cart="toggleCart" @remove-from-cart="removeFromCart"
+            @buy-products="buyProducts" />
     </div>
 </template>
 
 <script>
 import CartComponent from './Cart_Component.vue';
-import { userService } from '@/services/userService';
+import { getProducts } from '@/services/productsService.js';
+import { userService } from '@/services/userService.js';  // Importa userService
 
 export default {
     name: 'ProductsComponent',
@@ -61,69 +63,45 @@ export default {
         return {
             categories: ['Palas', 'Accesorios', 'Ropa'],
             activeCategory: 'Palas',
-            palas: [
-                {
-                    id: 1,
-                    name: 'Pala Modelo Pro',
-                    description: 'Una Pala para los jugadores más avanzados.',
-                    price: 150,
-                    image: require('@/assets/RaquetaPadel.jpg'),
-                },
-                {
-                    id: 2,
-                    name: 'Pala Iniciación',
-                    description: 'Perfecta para empezar en el mundo del padel.',
-                    price: 100,
-                    image: require('@/assets/RaquetaPadel.jpg'),
-                }
-            ],
-            accesorios: [
-                {
-                    id: 3,
-                    name: 'Overgrip Comfort',
-                    description: 'Mejora tu agarre y juego con el Overgrip Comfort, que proporciona una adherencia excepcional y una sensación suave al tacto.',
-                    price: 10,
-                    image: require('@/assets/accesorios.jpg'),
-                },
-                {
-                    id: 4,
-                    name: 'Antivibradores ShockFree',
-                    description: 'Los Antivibradores ShockFree reducen las vibraciones del impacto y protegen tu brazo, permitiéndote jugar con mayor comodidad.',
-                    price: 15,
-                    image: require('@/assets/accesorios.jpg'),
-                }
-            ],
-            ropa: [
-                {
-                    id: 6,
-                    name: 'Camiseta TenisPro',
-                    description: 'Mantente fresco en la cancha con la Camiseta TenisPro, fabricada con materiales que absorben la humedad y ofrecen máxima movilidad.',
-                    price: 25,
-                    image: require('@/assets/ropa.jpg'),
-                },
-                {
-                    id: 7,
-                    name: 'Falda Deportiva Ace',
-                    description: 'Con su diseño elegante y tejido flexible, la Falda Deportiva Ace es perfecta para moverse libremente y con estilo.',
-                    price: 30,
-                    image: require('@/assets/ropa.jpg'),
-                }
-            ],
+            products: [],
+            filteredProducts: {
+                palas: [],
+                accesorios: [],
+                ropa: []
+            },
             cart: [],
             cartVisible: false,
             showMessage: false,
             message: ''
         };
     },
+    async created() {
+        try {
+            const products = await getProducts();
+            this.products = products;
+            this.filterProducts();
+        } catch (error) {
+            console.error('Error loading products:', error);
+        }
+    },
     methods: {
+        setActiveCategory(category) {
+            this.activeCategory = category;
+            this.filterProducts();
+        },
+        filterProducts() {
+            this.filteredProducts.palas = this.products.filter(product => product.idCategoria === 1);
+            this.filteredProducts.accesorios = this.products.filter(product => product.idCategoria === 2);
+            this.filteredProducts.ropa = this.products.filter(product => product.idCategoria === 3);
+        },
         addToCart(product) {
-            const cartProduct = this.cart.find(item => item.id === product.id);
+            const cartProduct = this.cart.find(item => item.idProduct === product.idProduct);
             if (cartProduct) {
                 cartProduct.quantity++;
             } else {
                 this.cart.push({ ...product, quantity: 1 });
             }
-            this.message = `${product.name} añadido al carrito!`;
+            this.message = `${product.name_Product} añadido al carrito!`;
             this.showMessage = true;
             setTimeout(() => {
                 this.showMessage = false;
@@ -146,11 +124,11 @@ export default {
                 const purchaseData = {
                     userId: currentUser.idUser,
                     productos: this.cart.map(product => ({
-                        productId: product.id,
+                        productId: product.idProduct,
                         quantity: product.quantity
                     }))
                 };
-                await userService.buyProducts(purchaseData);
+                await userService.buyProducts(purchaseData);  // Usa userService.buyProducts
                 this.cart = [];
                 this.message = 'Compra realizada con éxito';
                 this.showMessage = true;

@@ -38,7 +38,7 @@ import Player_Component from '@/components/Player_Component.vue';
 const route = useRoute();
 const partidoId = computed(() => parseInt(route.params.id, 10));
 const partido = ref(null);
-const availablePositions = ref([true, true, true, true]); // Initially all positions are available
+const availablePositions = ref([true, true, true, false]); // Initially all positions are available
 const selectedPlayer = ref(null);
 
 const fetchPartidoDetails = async () => {
