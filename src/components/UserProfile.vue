@@ -4,15 +4,16 @@
     <p><strong>Nombre:</strong> {{ currentUser.userName }}</p>
     <p><strong>Email:</strong> {{ currentUser.email }}</p>
     <h3>Compras Realizadas</h3>
-    <ul  v-for="compra in compras" :key="compra.id">{{ compra.description }} - {{ new
-        Date(compra.date).toLocaleDateString() }}>
-      <li>
-        hola
+    <ul>
+      <li v-for="compra in compras" :key="compra.id">
+        {{ compra.description }} - {{ compra.date }} - {{ compra.total }}€
       </li>
     </ul>
+
     <button @click="logout">Cerrar Sesión</button>
   </div>
 </template>
+
 
 <script>
 import { userService } from '@/services/userService';
@@ -40,17 +41,26 @@ export default {
     },
     async loadUserPurchases() {
       try {
-        const compras = await userService.getUserPurchases(this.currentUser.idUser);
-        console.log('Compras:', compras); // Verifica las compras obtenidas
-        this.compras = compras.productos.map(product => ({
-          description: product.nombre,
-          date: new Date().toLocaleDateString(),
-          total: product.precioTotal
-        }));
+        const response = await userService.getUserPurchases(this.currentUser.idUser);
+        const compras = response.data; 
+        console.log('Compras:', compras); 
+
+        if (compras && Array.isArray(compras)) {
+          this.compras = compras.map(compra => ({
+            id: compra.idProducto, 
+            description: compra.nombre,
+            date: new Date(compra.fecha).toLocaleDateString(),
+            total: compra.precioTotal
+          }));
+        } else {
+          this.compras = [];
+          console.error('No se encontraron compras.');
+        }
       } catch (error) {
         console.error('Error al cargar las compras:', error);
       }
     },
+
     logout() {
       localStorage.removeItem('currentUser');
       this.$router.push('/');
