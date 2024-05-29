@@ -4,9 +4,11 @@
     <p><strong>Nombre:</strong> {{ currentUser.userName }}</p>
     <p><strong>Email:</strong> {{ currentUser.email }}</p>
     <h3>Compras Realizadas</h3>
-    <ul>
-      <li v-for="compra in compras" :key="compra.id">{{ compra.description }} - {{ new
-        Date(compra.date).toLocaleDateString() }}</li>
+    <ul  v-for="compra in compras" :key="compra.id">{{ compra.description }} - {{ new
+        Date(compra.date).toLocaleDateString() }}>
+      <li>
+        hola
+      </li>
     </ul>
     <button @click="logout">Cerrar Sesión</button>
   </div>

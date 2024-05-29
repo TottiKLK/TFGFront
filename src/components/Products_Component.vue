@@ -99,7 +99,14 @@ export default {
             if (cartProduct) {
                 cartProduct.quantity++;
             } else {
-                this.cart.push({ ...product, quantity: 1 });
+                this.cart.push({
+                    idProduct: product.idProduct,
+                    name: product.name_Product,
+                    description: product.product_Description,
+                    price: product.product_Price,
+                    image: product.product_Image,
+                    quantity: 1
+                });
             }
             this.message = `${product.name_Product} añadido al carrito!`;
             this.showMessage = true;

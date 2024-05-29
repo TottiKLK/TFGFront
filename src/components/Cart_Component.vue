@@ -138,16 +138,11 @@ export default {
     color: #333;
 }
 
-.cart-item-details p {
-    margin: 0.25rem 0;
-    font-size: 0.875rem;
-    color: #666;
-}
-
 .cart-item-actions {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: 0.5rem;
 }
 
 .cart-item-actions p {
@@ -166,6 +161,7 @@ export default {
     font-size: 0.875rem;
     font-weight: 500;
     transition: background-color 0.3s ease;
+    margin-top: 0.5rem;
 }
 
 .remove-product-button:hover {
