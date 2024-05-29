@@ -34,7 +34,7 @@ export async function fetchUsuariosPartido(partidoId) {
 
 export async function reservePosition(partidoId, usuarioId, position) {
   try {
-    const response = await axios.post(`${API_URL}/Partido/${partidoId}/usuarios/${usuarioId}`, { position }, {
+    const response = await axios.post(`${API_URL}/Partido/${partidoId}/usuarios/${usuarioId}?position=${position}`, {
       headers: {
         'Content-Type': 'application/json'
       }

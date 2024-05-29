@@ -7,14 +7,14 @@
         <Field_Component />
         <div class="fieldgrid">
           <div v-for="(availablePosition, index) in availablePositions" :key="index" class="fielditem">
-            <Player_Component @toggle="() => changeSelected(index)"
-              :isSelected="selectedPlayer === index" :notAvailable="!availablePosition" />
+            <Player_Component @toggle="() => changeSelected(index)" :isSelected="selectedPlayer === index"
+              :notAvailable="!availablePosition" />
           </div>
         </div>
       </div>
     </div>
     <div class="buttons">
-      <button class="reserve-button" @click="reservePosition">Reservar</button>
+      <button class="reserve-button" @click="handleReservePosition">Reservar</button>
       <router-link to="/partidos">
         <button class="back-button">Volver</button>
       </router-link>
@@ -31,51 +31,76 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import axios from 'axios';
 import Field_Component from '@/components/Field_Component.vue';
 import Player_Component from '@/components/Player_Component.vue';
+import { getCurrentUser } from '@/utils/auth';
+import { reservePosition, fetchUsuariosPartido, fetchPartido } from '@/services/partidosService';
 
 const route = useRoute();
 const partidoId = computed(() => parseInt(route.params.id, 10));
 const partido = ref(null);
-const availablePositions = ref([true, true, true, false]); // Initially all positions are available
+const availablePositions = ref([true, true, true, true]); // Initially all positions are available
 const selectedPlayer = ref(null);
 
-const fetchPartidoDetails = async () => {
+const fetchPlayers = async () => {
+  const info = await fetchPartido(partidoId.value);
+  partido.value = info;
+
   try {
-    const response = await axios.get(`http://localhost:5025/Partido/${partidoId.value}`);
-    partido.value = response.data;
-    if (partido.value && partido.value.positions) {
-      console.log(partido.value.positions); // Añadir este log para verificar los datos
-      // Assuming partido.value has an array `positions` indicating the availability
-      availablePositions.value = [true, true, true, true]; // Reset the positions
-      partido.value.positions.forEach(pos => {
-        availablePositions.value[pos.index] = !pos.ocupado;
-      });
-    } else {
-      console.error('No positions found in the response.');
+    const players = await fetchUsuariosPartido(partidoId.value);
+    players.forEach((player) => {
+      console.log('player', player)
+      availablePositions.value[player.position] = false;
+    });
+
+    const currentUser = getCurrentUser();
+
+    const player = players.find(player => player.userName === currentUser.userName);
+    if (player) {
+      selectedPlayer.value = player.position;
     }
   } catch (error) {
-    console.error('Error fetching partido details:', error);
+    console.log('No hay jugadores para este partido');
   }
-};
+}
 
-const reservePosition = async () => {
+const handleReservePosition = async () => {
   if (selectedPlayer.value === null) {
     alert('Seleccione una posición para reservar.');
     return;
   }
+
+  const currentUser = getCurrentUser();
+
+  if (currentUser === null) {
+    alert('Por favor, inicia sesión antes de realizar una reserva.');
+    return;
+  }
+
   try {
-    const userId = 1; // Replace with the actual user ID
-    await axios.post(`http://localhost:5025/Partido/${partidoId.value}/usuarios/${userId}`, {
-      position: selectedPlayer.value
-    });
-    alert('Reserva realizada con éxito.');
-    await fetchPartidoDetails(); // Refresh the details to update the UI
+    const players = await fetchUsuariosPartido(partidoId.value); 
+
+    if (players) {
+      const player = players.find(player => player.userName === currentUser.userName);
+      if (player) {
+        alert('Ya tienes una reserva para este partido.');
+        return;
+      }
+    }
+  } catch (error) {
+    console.log('No hay jugadores para este partido');
+  }
+
+  try {
+    const response = await reservePosition(partidoId.value, currentUser.idUser, selectedPlayer.value);
+    if (response) {
+      alert('Reserva realizada con éxito.');
+    } 
   } catch (error) {
     console.error('Error reserving position:', error);
-    alert('Error al reservar la posición.');
   }
+
+  await fetchPlayers(); // Refresh the details to update the UI
 };
 
 function changeSelected(index) {
@@ -86,7 +111,7 @@ function changeSelected(index) {
   selectedPlayer.value = selectedPlayer.value === index ? null : index;
 }
 
-onMounted(fetchPartidoDetails);
+onMounted(fetchPlayers);
 </script>
 
 <style scoped>
@@ -173,7 +198,8 @@ body {
   margin-top: 20px;
 }
 
-.back-button, .reserve-button {
+.back-button,
+.reserve-button {
   display: block;
   margin: 20px auto;
   padding: 10px 20px;
@@ -186,7 +212,8 @@ body {
   transition: background-color 0.3s, box-shadow 0.3s;
 }
 
-.back-button:hover, .reserve-button:hover {
+.back-button:hover,
+.reserve-button:hover {
   background-color: #0056b3;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
 }

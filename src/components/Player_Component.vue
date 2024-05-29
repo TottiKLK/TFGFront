@@ -46,11 +46,11 @@ const emit = defineEmits(["toggle"]);
     transform: translateY(-3px);
 }
 
-.buttonplayer-selected > svg{
-    color: #6EDB53;
-}
-
 .buttonplayer-notavailable > svg{
     color: #db5353;
+}
+
+.buttonplayer-selected > svg{
+    color: #6EDB53;
 }
 </style>
