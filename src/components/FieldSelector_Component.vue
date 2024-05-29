@@ -3,6 +3,7 @@
     <h1>Zona de Partidos</h1>
     <div class="partidos-grid">
       <div class="partido-card" v-for="(match, index) in partidos" :key="index">
+        <img :src="match.imageUrl" alt="Imagen del partido" class="partido-image" />
         <h2>{{ match.name }}</h2>
         <p>{{ match.description }}</p>
         <p>Duración: {{ match.duration }}</p>
@@ -57,6 +58,12 @@ export default {
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: left;
+}
+
+.partido-image {
+  width: 100%;
+  height: auto;
+  border-radius: 10px 10px 0 0; /* Ajusta los bordes de la imagen */
 }
 
 button {

@@ -8,7 +8,7 @@
             <router-link to="/Products" class="navbar-item">{{ $t('navbar.products') }}</router-link>
             <router-link to="/reservas" class="navbar-item">{{ $t('navbar.tracks') }}</router-link>
             <router-link to="/partidos" class="navbar-item">{{ $t('navbar.matches') }}</router-link>
-            <router-link :to="profileLink" class="navbar-item">{{ $t('navbar.profile') }}</router-link>
+            <router-link :to="profileLink" class="navbar-item">{{ currentUser ? currentUser.userName : $t('navbar.login') }}</router-link>
             <div class="language-selector">
                 <select v-model="currentLocale" @change="changeLocale">
                     <option value="en">Español</option>
@@ -25,6 +25,8 @@
 </template>
 
 <script>
+import { getCurrentUser } from '@/utils/auth';
+
 export default {
     name: 'Navbar_Component',
     data() {
@@ -37,7 +39,8 @@ export default {
     },
     computed: {
         profileLink() {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const currentUser = getCurrentUser();
+
             if (currentUser) {
                 if (currentUser.rol === 1) {
                     return '/intranet';
@@ -52,6 +55,9 @@ export default {
         },
         isLoggedIn() {
             return !!localStorage.getItem('currentUser');
+        },
+        currentUser() {
+            return getCurrentUser();
         }
     },
     mounted() {
