@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5025'; // Asegúrate de que esta URL sea la correcta para tu backend
+const API_URL = 'http://localhost:5025'; 
 
 export const fetchPistas = async () => {
     try {

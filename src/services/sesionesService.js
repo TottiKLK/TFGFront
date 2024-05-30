@@ -16,7 +16,7 @@ export const createSesion = async (sesion) => {
         const response = await axios.post(`${API_URL}/Sesion`, sesion);
         return response.data;
     } catch (error) {
-        console.error('Error creating sesion:', error);
+        console.error('Error creating sesion:', error.response ? error.response.data : error.message);
         throw error;
     }
 };
@@ -26,7 +26,7 @@ export const updateSesion = async (id, sesion) => {
         const response = await axios.put(`${API_URL}/Sesion/${id}`, sesion);
         return response.data;
     } catch (error) {
-        console.error('Error updating sesion:', error);
+        console.error('Error updating sesion:', error.response ? error.response.data : error.message);
         throw error;
     }
 };
@@ -36,7 +36,7 @@ export const deleteSesion = async (id) => {
         const response = await axios.delete(`${API_URL}/Sesion/${id}`);
         return response.data;
     } catch (error) {
-        console.error('Error deleting sesion:', error);
+        console.error('Error deleting sesion:', error.response ? error.response.data : error.message);
         throw error;
     }
 };

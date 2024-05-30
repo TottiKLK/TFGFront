@@ -3,7 +3,7 @@
         <h1>Gestión de Sesiones</h1>
         <form @submit.prevent="nuevaSesion.idSesion ? editarSesion() : crearSesion()" class="sesion-form">
             <div class="form-row">
-                <input v-model="nuevaSesion.sessionTime" type="time" placeholder="Hora de la sesión">
+                <input v-model="nuevaSesion.sesionTime" type="text" placeholder="Hora de la sesión (HH:MM)">
                 <select v-model="nuevaSesion.idPista">
                     <option disabled value="">Seleccione una pista</option>
                     <option v-for="pista in pistas" :key="pista.idPista" :value="pista.idPista">
@@ -15,7 +15,7 @@
         </form>
         <div class="sesion-item" v-for="sesion in sesiones" :key="sesion.idSesion">
             <div class="detail-row">
-                <p>Hora: {{ sesion.sessionTime }}</p>
+                <p>Hora: {{ sesion.sesionTime }}</p>
                 <p>Pista: {{ getPistaName(sesion.idPista) }}</p>
                 <button @click="cargarSesionParaEdicion(sesion)">Editar</button>
                 <button @click="handleEliminarSesion(sesion)">Eliminar</button>
@@ -35,14 +35,20 @@ export default {
         const sesiones = ref([]);
         const pistas = ref([]);
         const nuevaSesion = ref({
-            sessionTime: '',
+            sesionTime: '',
             idPista: '',
             idSesion: null
         });
 
         const cargarSesiones = async () => {
             try {
-                sesiones.value = await fetchSesiones();
+                const response = await fetchSesiones();
+                console.log('Sesiones obtenidas:', response);
+                sesiones.value = response.map(s => ({
+                    ...s,
+                    sesionTime: s.sesionTime ? String(s.sesionTime) : 'Hora no disponible'
+                }));
+                console.log('Sesiones procesadas:', sesiones.value);
             } catch (error) {
                 console.error('Error al cargar las sesiones:', error);
             }
@@ -58,17 +64,25 @@ export default {
 
         const crearSesion = async () => {
             try {
-                const sesionCreada = await createSesion(nuevaSesion.value);
+                const sesionData = {
+                    sesionTime: nuevaSesion.value.sesionTime.trim(),
+                    idPista: nuevaSesion.value.idPista
+                };
+                console.log('Datos de la sesión a crear:', sesionData);
+                const sesionCreada = await createSesion(sesionData);
                 sesiones.value.push(sesionCreada);
-                nuevaSesion.value = { sessionTime: '', idPista: '', idSesion: null };
+                nuevaSesion.value = { sesionTime: '', idPista: '', idSesion: null };
             } catch (error) {
-                console.error('Error al crear la sesión:', error);
+                console.error('Error al crear la sesión:', error.response ? error.response.data : error.message);
             }
         };
 
         const editarSesion = async () => {
             try {
-                const response = await updateSesion(nuevaSesion.value.idSesion, nuevaSesion.value);
+                const response = await updateSesion(nuevaSesion.value.idSesion, {
+                    sessionTime: nuevaSesion.value.sessionTime.trim(), 
+                    idPista: nuevaSesion.value.idPista
+                });
                 if (response) {
                     const index = sesiones.value.findIndex(s => s.idSesion === nuevaSesion.value.idSesion);
                     if (index !== -1) {
