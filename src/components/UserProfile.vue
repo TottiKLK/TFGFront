@@ -4,12 +4,18 @@
     <p><strong>Nombre:</strong> {{ currentUser.userName }}</p>
     <p><strong>Email:</strong> {{ currentUser.email }}</p>
     <h3>Compras Realizadas</h3>
-    <ul>
-      <li v-for="compra in compras" :key="compra.id">
-        {{ compra.nombre }} - {{ compra.precioTotal }}€
-      </li>
-    </ul>
-
+    <div v-for="compra in compras" :key="compra.idCompra" class="compra-container">
+      <h4>Compra ID: {{ compra.idCompra }}</h4>
+      <p><strong>Total:</strong> {{ calcularTotal(compra.productos) }}€</p>
+      <ul class="productos-list">
+        <li v-for="producto in compra.productos" :key="producto.idProducto" class="producto-item">
+          <p>{{ producto.nombre }}</p>
+          <p><strong>Cantidad:</strong> {{ producto.cantidad }}</p>
+          <p><strong>Precio Total:</strong> {{ producto.precioTotal }}€</p>
+        </li>
+      </ul>
+      <button @click="cancelPurchase(compra.idCompra)">Cancelar Compra</button>
+    </div>
     <button @click="logout">Cerrar Sesión</button>
   </div>
 </template>
@@ -41,46 +47,24 @@ export default {
     async loadUserPurchases() {
       try {
         const response = await userService.getUserPurchases(this.currentUser.idUser);
-        console.log('respuesta recibida:', response);
-        const compras = response.data;
-
-        var prueba = response.data;
-        console.log('valores prueba:', prueba);
-        let prubea2 = response.data;
-        console.log('valores prubea2', prubea2);
-
-        console.log(this.currentUser.idUser);
-        console.log('Compras:', compras);
-
-        /*if (!compras || compras.length === 0) {
-          console.error('No hay compras en la respuesta:', response);
-          return;
-        }*/
-
-        // Recolectamos todos los productos de todas las compras
-        let allProducts = [];
-
-        const primeraCompra = response.find(compra => Array.isArray(compra.productos));
-
-        if (primeraCompra) {
-          allProducts = primeraCompra.productos.map(product => ({
-            id: product.idProducto,
-            nombre: product.nombre,
-            precioTotal: product.precioTotal
-          }));
-        } else {
-          console.error('No se encontró ninguna compra con un array de productos.');
-        }
-        console.log(allProducts);
-
-        this.compras = allProducts;
-        console.log('Compras mapeadas:', this.compras);
-
+        this.compras = response; // Asignar directamente la respuesta
       } catch (error) {
         console.error('Error al cargar las compras:', error);
       }
     },
-
+    async cancelPurchase(compraId) {
+      try {
+        await userService.deleteUserPurchase(this.currentUser.idUser, compraId);
+        this.loadUserPurchases(); // Actualizar la lista de compras después de cancelar
+        window.location.reload(); // Recargar la página después de cancelar la compra
+      } catch (error) {
+        console.error('Error al cancelar la compra:', error);
+        alert('Error al cancelar la compra');
+      }
+    },
+    calcularTotal(productos) {
+      return productos.reduce((total, producto) => total + producto.precioTotal, 0);
+    },
     logout() {
       localStorage.removeItem('currentUser');
       this.$router.push('/');
@@ -96,9 +80,32 @@ export default {
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 400px;
+  max-width: 800px;
   margin: 40px auto;
   margin-top: 10%;
+}
+
+.compra-container {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.productos-list {
+  list-style: none;
+  padding: 0;
+}
+
+.producto-item {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #ddd;
+  padding: 0.5rem 0;
+}
+
+.producto-item p {
+  margin: 0;
 }
 
 button {
