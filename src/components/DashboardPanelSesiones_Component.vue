@@ -3,7 +3,7 @@
         <h1>Gestión de Sesiones</h1>
         <form @submit.prevent="nuevaSesion.idSesion ? editarSesion() : crearSesion()" class="sesion-form">
             <div class="form-row">
-                <input v-model="nuevaSesion.sessionTime" type="text" placeholder="Hora de la sesión">
+                <input v-model="nuevaSesion.sessionTime" type="time" placeholder="Hora de la sesión">
                 <select v-model="nuevaSesion.idPista">
                     <option disabled value="">Seleccione una pista</option>
                     <option v-for="pista in pistas" :key="pista.idPista" :value="pista.idPista">

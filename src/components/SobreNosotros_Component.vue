@@ -74,9 +74,9 @@ export default {
     align-items: center;
     justify-content: center;
     margin: 3em 0;
-    background-color: #ffffff;
+    background-color: #999999;
     border-radius: 8px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
     transition: transform 0.3s ease-in-out;
 }
 

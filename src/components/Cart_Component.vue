@@ -45,7 +45,6 @@ export default {
         async buyProducts() {
             try {
                 await this.$emit('buy-products');
-                alert('Compra realizada con éxito');
                 this.toggleCart();
             } catch (error) {
                 console.error('Error al realizar la compra:', error);

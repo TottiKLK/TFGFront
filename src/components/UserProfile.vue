@@ -6,14 +6,13 @@
     <h3>Compras Realizadas</h3>
     <ul>
       <li v-for="compra in compras" :key="compra.id">
-        {{ compra.description }} - {{ compra.date }} - {{ compra.total }}€
+        {{ compra.nombre }} - {{ compra.precioTotal }}€
       </li>
     </ul>
 
     <button @click="logout">Cerrar Sesión</button>
   </div>
 </template>
-
 
 <script>
 import { userService } from '@/services/userService';
@@ -42,20 +41,41 @@ export default {
     async loadUserPurchases() {
       try {
         const response = await userService.getUserPurchases(this.currentUser.idUser);
-        const compras = response.data; 
-        console.log('Compras:', compras); 
+        console.log('respuesta recibida:', response);
+        const compras = response.data;
 
-        if (compras && Array.isArray(compras)) {
-          this.compras = compras.map(compra => ({
-            id: compra.idProducto, 
-            description: compra.nombre,
-            date: new Date(compra.fecha).toLocaleDateString(),
-            total: compra.precioTotal
+        var prueba = response.data;
+        console.log('valores prueba:', prueba);
+        let prubea2 = response.data;
+        console.log('valores prubea2', prubea2);
+
+        console.log(this.currentUser.idUser);
+        console.log('Compras:', compras);
+
+        /*if (!compras || compras.length === 0) {
+          console.error('No hay compras en la respuesta:', response);
+          return;
+        }*/
+
+        // Recolectamos todos los productos de todas las compras
+        let allProducts = [];
+
+        const primeraCompra = response.find(compra => Array.isArray(compra.productos));
+
+        if (primeraCompra) {
+          allProducts = primeraCompra.productos.map(product => ({
+            id: product.idProducto,
+            nombre: product.nombre,
+            precioTotal: product.precioTotal
           }));
         } else {
-          this.compras = [];
-          console.error('No se encontraron compras.');
+          console.error('No se encontró ninguna compra con un array de productos.');
         }
+        console.log(allProducts);
+
+        this.compras = allProducts;
+        console.log('Compras mapeadas:', this.compras);
+
       } catch (error) {
         console.error('Error al cargar las compras:', error);
       }
@@ -67,7 +87,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>
