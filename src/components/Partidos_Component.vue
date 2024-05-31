@@ -46,7 +46,6 @@ export default {
       const partidoId = route.params.id;
       partido.value = await fetchPartido(partidoId);
 
-      // Obtén los usuarios ya reservados para este partido
       const usuarios = await fetchUsuariosPartido(partidoId);
       usuarios.forEach(usuario => {
         players.value[usuario.position - 1].status = 'reserved';
@@ -66,7 +65,6 @@ export default {
           return;
         }
 
-        // Obtén el ID del usuario del localStorage
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         if (!currentUser || !currentUser.idUser) {
           alert('Usuario no autenticado.');
@@ -75,9 +73,8 @@ export default {
 
         const userId = currentUser.idUser;
         const partidoId = partido.value.idPartido;
-        const position = selectedPlayerIndex + 1; // La posición es 1, 2, 3 o 4
+        const position = selectedPlayerIndex + 1; 
 
-        // Verificar valores antes de la solicitud
         console.log('Reservando posición:');
         console.log('partidoId:', partidoId);
         console.log('userId:', userId);

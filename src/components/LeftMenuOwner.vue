@@ -48,7 +48,7 @@ export default {
     position: relative;
     padding: 0px 20px;
     transition: margin-left .3s ease-in-out, width .3s ease-in-out;
-    overflow-y: hidden; /* Evita el scroll */
+    overflow-y: hidden; 
     min-height: 100vh;
 }
 
@@ -87,7 +87,7 @@ export default {
 
 .ds-menu {
     width: 100%;
-    height: calc(100% - 150px); /* Ajusta la altura para que no haya overflow */
+    height: calc(100% - 150px); 
     padding-bottom: 20px;
     padding-top: 20px;
     border-top: 1px solid #252628;
@@ -104,7 +104,7 @@ export default {
     background: transparent;
     display: block;
     margin-bottom: 10px;
-    padding: 10px 10px; /* Ajusta el padding para botones más pequeños */
+    padding: 10px 10px; 
     border-radius: 4px;
     text-align: left;
     transition: background-color 0.3s ease;

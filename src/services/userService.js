@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const API_URL = 'http://localhost:5025/Usuario';
+const RESERVA_API_URL = 'http://localhost:5025/Reserva';
 
 const userService = {
     getUsers,
@@ -9,7 +10,9 @@ const userService = {
     deleteUser,
     getUserPurchases,
     deleteUserPurchase,
-    buyProducts
+    buyProducts,
+    getUserReservations, 
+    deleteUserReservation 
 };
 
 async function getUsers() {
@@ -88,6 +91,25 @@ async function buyProducts(purchaseData) {
                 cantidad: product.quantity
             }))
         });
+        return response.data;
+    } catch (error) {
+        handleError(error);
+    }
+}
+
+// Nuevas funciones para manejar reservas
+async function getUserReservations(userId) {
+    try {
+        const response = await axios.get(`${RESERVA_API_URL}/user/${userId}`);
+        return response.data;
+    } catch (error) {
+        handleError(error);
+    }
+}
+
+async function deleteUserReservation(reservationId) { 
+    try {
+        const response = await axios.delete(`${RESERVA_API_URL}/${reservationId}`);
         return response.data;
     } catch (error) {
         handleError(error);

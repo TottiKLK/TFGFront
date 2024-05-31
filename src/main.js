@@ -1,5 +1,13 @@
+// src/main.js
 import { createApp } from 'vue';
+import { createPinia } from 'pinia';
 import App from './App.vue';
+
+const app = createApp(App);
+const pinia = createPinia();
+
+app.use(pinia);
+
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '@/views/Home_View.vue';
 import ReservasView from '@/views/Reservas_View.vue';
@@ -101,8 +109,6 @@ const router = createRouter({
     history: createWebHistory(),
     routes,
 });
-
-const app = createApp(App);
 
 app.use(router);
 app.use(i18n);

@@ -22,7 +22,7 @@ export default {
                 name: '',
                 email: '',
                 password: '',
-                rol: 2,  // Asumie ndo que '2' es el rol por defecto para usuarios regulares
+                rol: 2,  
             },
             error: false,
             errorMessage: '',
@@ -38,9 +38,9 @@ export default {
                         Password: this.userData.password,
                         Rol: this.userData.rol
                     };
-                    const response = await register(userData);  // Guarda la respuesta para usarla
+                    const response = await register(userData);  
                     alert('Registro exitoso, por favor inicie sesión.');
-                    console.log(response);  // Puedes usar la respuesta para algo específico aquí
+                    console.log(response);  
                     this.switchToLogin();
                 } catch (error) {
                     this.error = true;
@@ -50,7 +50,7 @@ export default {
             }
         },
         switchToLogin() {
-            this.$emit('switch-form');  // Emite un evento para cambiar al formulario de login
+            this.$emit('switch-form');  
         },
         validateForm() {
             if (!this.userData.name || !this.userData.email || !this.userData.password) {

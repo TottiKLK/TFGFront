@@ -39,7 +39,7 @@ import { reservePosition, fetchUsuariosPartido, fetchPartido } from '@/services/
 const route = useRoute();
 const partidoId = computed(() => parseInt(route.params.id, 10));
 const partido = ref(null);
-const availablePositions = ref([true, true, true, true]); // Initially all positions are available
+const availablePositions = ref([true, true, true, true]); 
 const selectedPlayer = ref(null);
 
 const fetchPlayers = async () => {
@@ -100,7 +100,7 @@ const handleReservePosition = async () => {
     console.error('Error reserving position:', error);
   }
 
-  await fetchPlayers(); // Refresh the details to update the UI
+  await fetchPlayers(); 
 };
 
 function changeSelected(index) {
@@ -115,7 +115,6 @@ onMounted(fetchPlayers);
 </script>
 
 <style scoped>
-/* Global Styles */
 body {
   font-family: 'Arial', sans-serif;
   background-color: #f4f4f9;
@@ -124,7 +123,6 @@ body {
   padding: 0;
 }
 
-/* Card Styles */
 .card {
   background: linear-gradient(145deg, #ffffff, #e6e6e6);
   border-radius: 20px;
@@ -137,7 +135,6 @@ body {
   margin-right: auto;
 }
 
-/* Container Styles */
 .container {
   display: flex;
   flex-direction: column;
@@ -148,7 +145,6 @@ body {
   margin-top: 5%;
 }
 
-/* Content Wrapper Styles */
 .content-wrapper {
   display: flex;
   align-items: center;
@@ -161,14 +157,12 @@ body {
   background-color: #fdfdfd;
 }
 
-/* Field Wrapper Styles */
 .field-wrapper {
   position: relative;
   width: 312px;
   height: 210px;
 }
 
-/* Field Grid Styles */
 .fieldgrid {
   display: grid;
   width: 100%;
@@ -180,7 +174,6 @@ body {
   left: 0;
 }
 
-/* Field Item Styles */
 .fielditem {
   display: flex;
   align-items: center;
@@ -191,7 +184,6 @@ body {
   transform: scaleX(-1);
 }
 
-/* Button Styles */
 .buttons {
   display: flex;
   gap: 10px;
@@ -218,7 +210,6 @@ body {
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Title and Description Styles */
 h1 {
   font-size: 3rem;
   margin-bottom: 10px;

@@ -63,7 +63,7 @@ export default {
 .partido-image {
   width: 100%;
   height: auto;
-  border-radius: 10px 10px 0 0; /* Ajusta los bordes de la imagen */
+  border-radius: 10px 10px 0 0; 
 }
 
 button {

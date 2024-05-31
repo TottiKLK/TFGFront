@@ -103,7 +103,7 @@ export default {
     text-transform: uppercase;
     text-align: center;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    font-family: 'Poppins', sans-serif; /* Aplicar la fuente Poppins */
+    font-family: 'Poppins', sans-serif; 
 }
 
 .company-name:hover,
@@ -116,7 +116,7 @@ export default {
 .about-us-container {
     text-align: center;
     color: #333;
-    font-family: 'Poppins', sans-serif; /* Aplicar la fuente Poppins */
+    font-family: 'Poppins', sans-serif; 
     max-width: 1200px;
     margin: 0 auto;
 }

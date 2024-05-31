@@ -227,7 +227,6 @@ export default {
 
     .mobile-language-selector {
         display: block;
-        /* Muestra el selector dentro del menú */
         padding: 10px;
         width: 100%;
     }

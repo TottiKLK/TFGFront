@@ -16,6 +16,14 @@
       </ul>
       <button @click="cancelPurchase(compra.idCompra)">Cancelar Compra</button>
     </div>
+    <h3>Reservas de Sesiones</h3>
+    <div v-for="reserva in reservas" :key="reserva.idReservation" class="reserva-container">
+      <h4>Reserva ID: {{ reserva.idReservation }}</h4>
+      <p><strong>Fecha:</strong> {{ reserva.reservationDate }}</p>
+      <p><strong>Precio:</strong> {{ reserva.reservationPrice }}€</p>
+      <p v-if="reserva.session && reserva.session.pista"><strong>Sesión:</strong> {{ reserva.session.sesionTime }} en {{ reserva.session.pista.name }} ({{ reserva.session.pista.duration }})</p>
+      <button @click="cancelReservation(reserva.idReservation)">Cancelar Reserva</button>
+    </div>
     <button @click="logout">Cerrar Sesión</button>
   </div>
 </template>
@@ -28,11 +36,13 @@ export default {
     return {
       currentUser: {},
       compras: [],
+      reservas: [], 
     };
   },
   mounted() {
     this.loadUserData();
     this.loadUserPurchases();
+    this.loadUserReservations(); 
   },
   methods: {
     loadUserData() {
@@ -47,19 +57,37 @@ export default {
     async loadUserPurchases() {
       try {
         const response = await userService.getUserPurchases(this.currentUser.idUser);
-        this.compras = response; // Asignar directamente la respuesta
+        this.compras = response; 
       } catch (error) {
         console.error('Error al cargar las compras:', error);
+      }
+    },
+    async loadUserReservations() { 
+      try {
+        const response = await userService.getUserReservations(this.currentUser.idUser);
+        this.reservas = response; 
+      } catch (error) {
+        console.error('Error al cargar las reservas:', error);
       }
     },
     async cancelPurchase(compraId) {
       try {
         await userService.deleteUserPurchase(this.currentUser.idUser, compraId);
-        this.loadUserPurchases(); // Actualizar la lista de compras después de cancelar
-        window.location.reload(); // Recargar la página después de cancelar la compra
+        this.loadUserPurchases(); 
+        window.location.reload(); 
       } catch (error) {
         console.error('Error al cancelar la compra:', error);
         alert('Error al cancelar la compra');
+      }
+    },
+    async cancelReservation(reservationId) {
+      try {
+        await userService.deleteUserReservation(reservationId);
+        this.loadUserReservations();
+        window.location.reload(); 
+      } catch (error) {
+        console.error('Error al cancelar la reserva:', error);
+        alert('Error al cancelar la reserva');
       }
     },
     calcularTotal(productos) {
@@ -85,7 +113,8 @@ export default {
   margin-top: 10%;
 }
 
-.compra-container {
+.compra-container,
+.reserva-container {
   margin-bottom: 2rem;
   padding: 1rem;
   border: 1px solid #ddd;
