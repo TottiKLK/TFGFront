@@ -10,10 +10,8 @@
             <router-link to="/partidos" class="navbar-item">{{ $t('navbar.matches') }}</router-link>
             <router-link :to="profileLink" class="navbar-item">{{ currentUser ? currentUser.userName : $t('navbar.login') }}</router-link>
             <div class="language-selector">
-                <select v-model="currentLocale" @change="changeLocale">
-                    <option value="en">Español</option>
-                    <option value="es">English</option>
-                </select>
+                <img src="../Icons/bandera-de-inglaterra.png" alt="Español" class="flag-icon" @click="changeLocale('es')" />
+                <img src="../Icons/espana.png" alt="English" class="flag-icon" @click="changeLocale('en')" />
             </div>
         </div>
         <div class="navbar-toggler-container" v-if="isMobile" @click="toggleMenu">
@@ -76,12 +74,14 @@ export default {
             this.menuVisible = !this.menuVisible;
             console.log('Menu toggled. Menu visible:', this.menuVisible);
         },
-        changeLocale() {
+        changeLocale(locale) {
+            this.currentLocale = locale;
             this.$i18n.locale = this.currentLocale;
         }
     }
 }
 </script>
+
 <style scoped>
 .flag-icon {
     cursor: pointer;
