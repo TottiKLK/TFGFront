@@ -1,11 +1,12 @@
-import axios from 'axios';
-
-const API_URL = 'http://localhost:5025'; 
+const API_URL = 'http://localhost:5025';
 
 export const fetchPistas = async () => {
     try {
-        const response = await axios.get(`${API_URL}/Pista`);
-        return response.data;
+        const response = await fetch(`${API_URL}/Pista`);
+        if (!response.ok) {
+            throw new Error('Error fetching courts');
+        }
+        return await response.json();
     } catch (error) {
         console.error('Error fetching courts:', error);
         throw error;
@@ -14,12 +15,11 @@ export const fetchPistas = async () => {
 
 export const fetchSesiones = async (pistaId) => {
     try {
-        const response = await axios.get(`${API_URL}/Sesion`, {
-            params: {
-                pistaId
-            }
-        });
-        return response.data;
+        const response = await fetch(`${API_URL}/Sesion?pistaId=${pistaId}`);
+        if (!response.ok) {
+            throw new Error('Error fetching sesiones');
+        }
+        return await response.json();
     } catch (error) {
         console.error('Error fetching sesiones:', error);
         throw error;
@@ -28,8 +28,17 @@ export const fetchSesiones = async (pistaId) => {
 
 export const createPista = async (pista) => {
     try {
-        const response = await axios.post(`${API_URL}/Pista`, pista);
-        return response.data;
+        const response = await fetch(`${API_URL}/Pista`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(pista)
+        });
+        if (!response.ok) {
+            throw new Error('Error creating pista');
+        }
+        return await response.json();
     } catch (error) {
         console.error('Error creating pista:', error);
         throw error;
@@ -38,8 +47,17 @@ export const createPista = async (pista) => {
 
 export const updatePista = async (id, pista) => {
     try {
-        const response = await axios.put(`${API_URL}/Pista/${id}`, pista);
-        return response.data;
+        const response = await fetch(`${API_URL}/Pista/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(pista)
+        });
+        if (!response.ok) {
+            throw new Error('Error updating pista');
+        }
+        return await response.json();
     } catch (error) {
         console.error('Error updating pista:', error);
         throw error;
@@ -48,8 +66,13 @@ export const updatePista = async (id, pista) => {
 
 export const deletePista = async (id) => {
     try {
-        const response = await axios.delete(`${API_URL}/Pista/${id}`);
-        return response.data;
+        const response = await fetch(`${API_URL}/Pista/${id}`, {
+            method: 'DELETE'
+        });
+        if (!response.ok) {
+            throw new Error('Error deleting pista');
+        }
+        return await response.json();
     } catch (error) {
         console.error('Error deleting pista:', error);
         throw error;
