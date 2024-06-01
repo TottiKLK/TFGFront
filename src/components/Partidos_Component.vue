@@ -27,14 +27,17 @@
 <script>
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { fetchPartido, reservePosition } from '@/services/partidosService';
+import { usePartidoStore } from '@/stores/partidoStore';
+import { storeToRefs } from 'pinia';
 
 export default {
   name: 'PartidoDetailView',
   setup() {
     const route = useRoute();
     const router = useRouter();
-    const partido = ref({});
+    const partidoStore = usePartidoStore();
+    const { partido } = storeToRefs(partidoStore);
+
     const players = ref([
       { id: 1, status: 'available' },
       { id: 2, status: 'available' },
@@ -43,10 +46,8 @@ export default {
     ]);
 
     onMounted(async () => {
-      const partidoId = route.params.id;
-      partido.value = await fetchPartido(partidoId);
-
-      const usuarios = await fetchUsuariosPartido(partidoId);
+      await partidoStore.fetchPartido(route.params.id);
+      const usuarios = await partidoStore.fetchUsuariosPartido(route.params.id);
       usuarios.forEach(usuario => {
         players.value[usuario.position - 1].status = 'reserved';
       });
@@ -73,14 +74,9 @@ export default {
 
         const userId = currentUser.idUser;
         const partidoId = partido.value.idPartido;
-        const position = selectedPlayerIndex + 1; 
+        const position = selectedPlayerIndex + 1;
 
-        console.log('Reservando posición:');
-        console.log('partidoId:', partidoId);
-        console.log('userId:', userId);
-        console.log('position:', position);
-
-        await reservePosition(partidoId, userId, position);
+        await partidoStore.reservePosition(partidoId, userId, position);
 
         players.value[selectedPlayerIndex].status = 'reserved';
         alert('Reserva realizada con éxito');
@@ -90,13 +86,9 @@ export default {
       }
     };
 
-    const selectPlayer = (index) => {
-      players.value.forEach(player => {
-        if (player.status === 'selected') player.status = 'available';
-      });
-      if (players.value[index].status === 'available') {
-        players.value[index].status = 'selected';
-      }
+    const togglePlayerStatus = (player) => {
+      if (player.status === 'reserved') return;
+      players.value.forEach(p => p.status = p.id === player.id ? (p.status === 'selected' ? 'available' : 'selected') : p.status === 'selected' ? 'available' : p.status);
     };
 
     const goBack = () => {
@@ -107,7 +99,7 @@ export default {
       partido,
       players,
       reserve,
-      selectPlayer,
+      togglePlayerStatus,
       goBack
     };
   }

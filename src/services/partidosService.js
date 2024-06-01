@@ -1,11 +1,10 @@
-import axios from 'axios';
-
 const API_URL = 'http://localhost:5025';
 
 export async function fetchPartidos() {
   try {
-    const response = await axios.get(`${API_URL}/Partido`);
-    return response.data;
+    const response = await fetch(`${API_URL}/Partido`);
+    if (!response.ok) throw new Error('Error fetching partidos');
+    return await response.json();
   } catch (error) {
     console.error('Error al obtener los partidos:', error);
     throw error;
@@ -14,8 +13,9 @@ export async function fetchPartidos() {
 
 export async function fetchPartido(partidoId) {
   try {
-    const response = await axios.get(`${API_URL}/Partido/${partidoId}`);
-    return response.data;
+    const response = await fetch(`${API_URL}/Partido/${partidoId}`);
+    if (!response.ok) throw new Error(`Error fetching partido ${partidoId}`);
+    return await response.json();
   } catch (error) {
     console.error(`Error al obtener el partido ${partidoId}:`, error);
     throw error;
@@ -24,8 +24,9 @@ export async function fetchPartido(partidoId) {
 
 export async function fetchUsuariosPartido(partidoId) {
   try {
-    const response = await axios.get(`${API_URL}/Partido/${partidoId}/usuarios`);
-    return response.data;
+    const response = await fetch(`${API_URL}/Partido/${partidoId}/usuarios`);
+    if (!response.ok) throw new Error(`Error fetching usuarios for partido ${partidoId}`);
+    return await response.json();
   } catch (error) {
     console.error(`Error al obtener los usuarios del partido ${partidoId}:`, error);
     throw error;
@@ -34,22 +35,31 @@ export async function fetchUsuariosPartido(partidoId) {
 
 export async function reservePosition(partidoId, usuarioId, position) {
   try {
-    const response = await axios.post(`${API_URL}/Partido/${partidoId}/usuarios/${usuarioId}?position=${position}`, {
+    const response = await fetch(`${API_URL}/Partido/${partidoId}/usuarios/${usuarioId}?position=${position}`, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       }
     });
-    return response.data;
+    if (!response.ok) throw new Error('Error reserving position');
+    return await response.json();
   } catch (error) {
-    console.error('Error al reservar la posición:', error.response ? error.response.data : error.message);
+    console.error('Error al reservar la posición:', error);
     throw error;
   }
 }
 
 export async function createPartido(partido) {
   try {
-    const response = await axios.post(`${API_URL}/Partido`, partido);
-    return response.data;
+    const response = await fetch(`${API_URL}/Partido`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(partido)
+    });
+    if (!response.ok) throw new Error('Error creating partido');
+    return await response.json();
   } catch (error) {
     console.error('Error al crear el partido:', error);
     throw error;
@@ -58,8 +68,15 @@ export async function createPartido(partido) {
 
 export async function updatePartido(id, partido) {
   try {
-    const response = await axios.put(`${API_URL}/Partido/${id}`, partido);
-    return response.data;
+    const response = await fetch(`${API_URL}/Partido/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(partido)
+    });
+    if (!response.ok) throw new Error('Error updating partido');
+    return await response.json();
   } catch (error) {
     console.error('Error al actualizar el partido:', error);
     throw error;
@@ -68,8 +85,11 @@ export async function updatePartido(id, partido) {
 
 export async function deletePartido(id) {
   try {
-    const response = await axios.delete(`${API_URL}/Partido/${id}`);
-    return response.data;
+    const response = await fetch(`${API_URL}/Partido/${id}`, {
+      method: 'DELETE'
+    });
+    if (!response.ok) throw new Error('Error deleting partido');
+    return await response.json();
   } catch (error) {
     console.error('Error al eliminar el partido:', error);
     throw error;

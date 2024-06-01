@@ -34,27 +34,27 @@ import { useRoute } from 'vue-router';
 import Field_Component from '@/components/Field_Component.vue';
 import Player_Component from '@/components/Player_Component.vue';
 import { getCurrentUser } from '@/utils/auth';
-import { reservePosition, fetchUsuariosPartido, fetchPartido } from '@/services/partidosService';
+import { usePartidoStore } from '@/stores/partidoStore';
+import { storeToRefs } from 'pinia';
 
 const route = useRoute();
+const partidoStore = usePartidoStore();
+const { partido } = storeToRefs(partidoStore);
+
 const partidoId = computed(() => parseInt(route.params.id, 10));
-const partido = ref(null);
 const availablePositions = ref([true, true, true, true]); 
 const selectedPlayer = ref(null);
 
 const fetchPlayers = async () => {
-  const info = await fetchPartido(partidoId.value);
-  partido.value = info;
+  await partidoStore.fetchPartido(partidoId.value);
 
   try {
-    const players = await fetchUsuariosPartido(partidoId.value);
+    const players = await partidoStore.fetchUsuariosPartido(partidoId.value);
     players.forEach((player) => {
-      console.log('player', player)
       availablePositions.value[player.position] = false;
     });
 
     const currentUser = getCurrentUser();
-
     const player = players.find(player => player.userName === currentUser.userName);
     if (player) {
       selectedPlayer.value = player.position;
@@ -62,7 +62,7 @@ const fetchPlayers = async () => {
   } catch (error) {
     console.log('No hay jugadores para este partido');
   }
-}
+};
 
 const handleReservePosition = async () => {
   if (selectedPlayer.value === null) {
@@ -71,15 +71,13 @@ const handleReservePosition = async () => {
   }
 
   const currentUser = getCurrentUser();
-
   if (currentUser === null) {
     alert('Por favor, inicia sesión antes de realizar una reserva.');
     return;
   }
 
   try {
-    const players = await fetchUsuariosPartido(partidoId.value); 
-
+    const players = await partidoStore.fetchUsuariosPartido(partidoId.value);
     if (players) {
       const player = players.find(player => player.userName === currentUser.userName);
       if (player) {
@@ -92,15 +90,13 @@ const handleReservePosition = async () => {
   }
 
   try {
-    const response = await reservePosition(partidoId.value, currentUser.idUser, selectedPlayer.value);
-    if (response) {
-      alert('Reserva realizada con éxito.');
-    } 
+    await partidoStore.reservePosition(partidoId.value, currentUser.idUser, selectedPlayer.value);
+    alert('Reserva realizada con éxito.');
   } catch (error) {
     console.error('Error reserving position:', error);
   }
 
-  await fetchPlayers(); 
+  await fetchPlayers();
 };
 
 function changeSelected(index) {

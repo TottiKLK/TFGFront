@@ -27,12 +27,15 @@
 
 <script>
 import { ref, onMounted } from 'vue';
-import { fetchPartidos, createPartido, updatePartido, deletePartido } from '@/services/partidosService.js';
+import { usePartidoStore } from '@/stores/partidoStore';
+import { storeToRefs } from 'pinia';
 
 export default {
     name: 'DashboardPanelPartidos',
     setup() {
-        const partidos = ref([]);
+        const partidoStore = usePartidoStore();
+        const { partidos, loading, error } = storeToRefs(partidoStore);
+
         const nuevoPartido = ref({
             name: '', 
             description: '', 
@@ -43,65 +46,36 @@ export default {
         });
 
         const cargarPartidos = async () => {
-            try {
-                partidos.value = await fetchPartidos();
-            } catch (error) {
-                console.error('Error al cargar los partidos:', error);
-            }
+            await partidoStore.fetchPartidos();
         };
 
         const crearPartido = async () => {
-            try {
-                const partidoCreado = await createPartido(nuevoPartido.value);
-                partidos.value.push(partidoCreado);
-                nuevoPartido.value = { 
-                    name: '', 
-                    description: '', 
-                    duration: '', 
-                    date: '', 
-                    estrellas: '', 
-                    idPartido: null 
-                };
-            } catch (error) {
-                console.error('Error al crear el partido:', error);
-            }
+            await partidoStore.createPartido(nuevoPartido.value);
+            resetNuevoPartido();
         };
 
         const editarPartido = async () => {
-            try {
-                const response = await updatePartido(nuevoPartido.value.idPartido, nuevoPartido.value);
-                if (response) {
-                    const index = partidos.value.findIndex(p => p.idPartido === nuevoPartido.value.idPartido);
-                    if (index !== -1) {
-                        partidos.value[index] = { ...partidos.value[index], ...response };
-                    }
-                    nuevoPartido.value = { 
-                        name: '', 
-                        description: '', 
-                        duration: '', 
-                        date: '', 
-                        estrellas: '', 
-                        idPartido: null 
-                    };
-                } else {
-                    console.error('La respuesta de la API está vacía');
-                }
-            } catch (error) {
-                console.error('Error al editar el partido:', error);
-            }
+            await partidoStore.updatePartido(nuevoPartido.value.idPartido, nuevoPartido.value);
+            resetNuevoPartido();
         };
 
         const handleEliminarPartido = async (partido) => {
-            try {
-                await deletePartido(partido.idPartido);
-                partidos.value = partidos.value.filter(p => p.idPartido !== partido.idPartido);
-            } catch (error) {
-                console.error('Error al eliminar el partido:', error);
-            }
+            await partidoStore.deletePartido(partido.idPartido);
         };
 
         const cargarPartidoParaEdicion = (partido) => {
             nuevoPartido.value = { ...partido };
+        };
+
+        const resetNuevoPartido = () => {
+            nuevoPartido.value = {
+                name: '', 
+                description: '', 
+                duration: '', 
+                date: '', 
+                estrellas: '', 
+                idPartido: null
+            };
         };
 
         onMounted(cargarPartidos);
@@ -113,7 +87,9 @@ export default {
             crearPartido,
             editarPartido,
             handleEliminarPartido,
-            cargarPartidoParaEdicion
+            cargarPartidoParaEdicion,
+            loading,
+            error
         };
     }
 };

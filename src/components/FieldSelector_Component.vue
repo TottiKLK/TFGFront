@@ -18,16 +18,18 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
-import { fetchPartidos } from '@/services/partidosService';
+import { onMounted } from 'vue';
+import { usePartidoStore } from '@/stores/partidoStore';
+import { storeToRefs } from 'pinia';
 
 export default {
   name: 'ZonaPartidos',
   setup() {
-    const partidos = ref([]);
+    const partidoStore = usePartidoStore();
+    const { partidos } = storeToRefs(partidoStore);
 
     onMounted(async () => {
-      partidos.value = await fetchPartidos();
+      await partidoStore.fetchPartidos();
     });
 
     return { partidos };
