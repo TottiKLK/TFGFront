@@ -1,11 +1,12 @@
-import axios from 'axios';
-
 const API_URL = 'http://localhost:5025/Producto';
 
 const getProducts = async () => {
     try {
-        const response = await axios.get(API_URL);
-        return response.data;
+        const response = await fetch(API_URL);
+        if (!response.ok) {
+            throw new Error('Error fetching products');
+        }
+        return await response.json();
     } catch (error) {
         console.error('Error fetching products:', error);
         throw error;
@@ -14,8 +15,17 @@ const getProducts = async () => {
 
 const createProduct = async (productData) => {
     try {
-        const response = await axios.post(API_URL, productData);
-        return response.data;
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(productData)
+        });
+        if (!response.ok) {
+            throw new Error('Error creating product');
+        }
+        return await response.json();
     } catch (error) {
         console.error('Error creating product:', error);
         throw error;
@@ -24,8 +34,17 @@ const createProduct = async (productData) => {
 
 const updateProduct = async (productId, productData) => {
     try {
-        const response = await axios.put(`${API_URL}/${productId}`, productData);
-        return response.data;
+        const response = await fetch(`${API_URL}/${productId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(productData)
+        });
+        if (!response.ok) {
+            throw new Error('Error updating product');
+        }
+        return await response.json();
     } catch (error) {
         console.error('Error updating product:', error);
         throw error;
@@ -34,8 +53,13 @@ const updateProduct = async (productId, productData) => {
 
 const deleteProduct = async (productId) => {
     try {
-        const response = await axios.delete(`${API_URL}/${productId}`);
-        return response.data;
+        const response = await fetch(`${API_URL}/${productId}`, {
+            method: 'DELETE'
+        });
+        if (!response.ok) {
+            throw new Error('Error deleting product');
+        }
+        return await response.json();
     } catch (error) {
         console.error('Error deleting product:', error);
         throw error;

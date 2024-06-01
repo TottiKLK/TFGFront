@@ -6,11 +6,11 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { onMounted } from 'vue';
 import LeftMenu from '@/components/LeftMenu_Component.vue';
 import DashboardPanelProductos from '@/components/DashboardPanelProductos_Component.vue';
-import { getProducts  } from '@/services/productsService.js';
-
+import { useProductStore } from '@/stores/productStore';
+import { storeToRefs } from 'pinia';
 
 export default {
     name: 'ProductoIntranetView',
@@ -19,20 +19,16 @@ export default {
         DashboardPanelProductos,
     },
     setup() {
-        const productos = ref([]);
-        const error = ref(null);
+        const productStore = useProductStore();
+        const { products, error } = storeToRefs(productStore);
 
         const loadProductos = async () => {
-            try {
-                productos.value = await getProducts();
-            } catch (e) {
-                error.value = e.message;
-            }
+            await productStore.fetchProducts();
         };
 
         onMounted(loadProductos);
 
-        return { productos, error };
+        return { products, error };
     }
 };
 </script>
@@ -49,5 +45,4 @@ export default {
 
 .productos-container {
 }
-
 </style>

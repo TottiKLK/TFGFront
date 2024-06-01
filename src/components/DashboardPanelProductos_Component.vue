@@ -34,12 +34,15 @@
 
 <script>
 import { ref, onMounted } from 'vue';
-import { getProducts, createProduct, updateProduct, deleteProduct } from '@/services/productsService.js';
+import { useProductStore } from '@/stores/productStore';
+import { storeToRefs } from 'pinia';
 
 export default {
     name: 'DashboardPanelProductos',
     setup() {
-        const productos = ref([]);
+        const productStore = useProductStore();
+        const { products, loading, error } = storeToRefs(productStore);
+        
         const nuevoProducto = ref({
             name_Product: '', 
             product_Description: '', 
@@ -51,55 +54,29 @@ export default {
         });
 
         const cargarProductos = async () => {
-            try {
-                productos.value = await getProducts();
-            } catch (error) {
-                console.error('Error al cargar los productos:', error);
-            }
+            await productStore.fetchProducts();
         };
 
         const crearProducto = async () => {
-            try {
-                if (!nuevoProducto.value.name_Product || !nuevoProducto.value.product_Description || !nuevoProducto.value.product_Price || !nuevoProducto.value.product_Amount || !nuevoProducto.value.product_Image || !nuevoProducto.value.idCategoria) {
-                    console.error('Todos los campos son obligatorios');
-                    return;
-                }
-                const productoCreado = await createProduct(nuevoProducto.value);
-                productos.value.push(productoCreado);
-                resetNuevoProducto();
-            } catch (error) {
-                console.error('Error al crear el producto:', error);
+            if (!nuevoProducto.value.name_Product || !nuevoProducto.value.product_Description || !nuevoProducto.value.product_Price || !nuevoProducto.value.product_Amount || !nuevoProducto.value.product_Image || !nuevoProducto.value.idCategoria) {
+                console.error('Todos los campos son obligatorios');
+                return;
             }
+            await productStore.createProduct(nuevoProducto.value);
+            resetNuevoProducto();
         };
 
         const editarProducto = async () => {
-            try {
-                if (!nuevoProducto.value.name_Product || !nuevoProducto.value.product_Description || !nuevoProducto.value.product_Price || !nuevoProducto.value.product_Amount || !nuevoProducto.value.product_Image || !nuevoProducto.value.idCategoria) {
-                    console.error('Todos los campos son obligatorios');
-                    return;
-                }
-                const response = await updateProduct(nuevoProducto.value.idProduct, nuevoProducto.value);
-                if (response) {
-                    const index = productos.value.findIndex(p => p.idProduct === nuevoProducto.value.idProduct);
-                    if (index !== -1) {
-                        productos.value[index] = { ...productos.value[index], ...response };
-                    }
-                    resetNuevoProducto();
-                } else {
-                    console.error('La respuesta de la API está vacía');
-                }
-            } catch (error) {
-                console.error('Error al editar el producto:', error);
+            if (!nuevoProducto.value.name_Product || !nuevoProducto.value.product_Description || !nuevoProducto.value.product_Price || !nuevoProducto.value.product_Amount || !nuevoProducto.value.product_Image || !nuevoProducto.value.idCategoria) {
+                console.error('Todos los campos son obligatorios');
+                return;
             }
+            await productStore.updateProduct(nuevoProducto.value.idProduct, nuevoProducto.value);
+            resetNuevoProducto();
         };
 
         const handleEliminarProducto = async (producto) => {
-            try {
-                await deleteProduct(producto.idProduct);
-                productos.value = productos.value.filter(p => p.idProduct !== producto.idProduct);
-            } catch (error) {
-                console.error('Error al eliminar el producto:', error);
-            }
+            await productStore.deleteProduct(producto.idProduct);
         };
 
         const cargarProductoParaEdicion = (producto) => {
@@ -130,7 +107,7 @@ export default {
         onMounted(cargarProductos);
 
         return {
-            productos,
+            productos: products,
             nuevoProducto,
             cargarProductos,
             crearProducto,
@@ -138,7 +115,9 @@ export default {
             handleEliminarProducto,
             cargarProductoParaEdicion,
             convertCategoriaToString,
-            resetNuevoProducto
+            resetNuevoProducto,
+            loading,
+            error
         };
     },
 };
