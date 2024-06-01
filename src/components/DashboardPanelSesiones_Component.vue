@@ -27,13 +27,13 @@
 <script>
 import { ref, onMounted } from 'vue';
 import { fetchSesiones, createSesion, updateSesion, deleteSesion } from '@/services/sesionesService.js';
-import { fetchPistas } from '@/services/pistasService.js';
+import { usePistaStore } from '@/stores/pistaStore';
 
 export default {
     name: 'DashboardPanelSesiones',
     setup() {
         const sesiones = ref([]);
-        const pistas = ref([]);
+        const pistasStore = usePistaStore();
         const nuevaSesion = ref({
             sesionTime: '',
             idPista: '',
@@ -56,7 +56,7 @@ export default {
 
         const cargarPistas = async () => {
             try {
-                pistas.value = await fetchPistas();
+                await pistasStore.fetchPistas();
             } catch (error) {
                 console.error('Error al cargar las pistas:', error);
             }
@@ -111,7 +111,7 @@ export default {
         };
 
         const getPistaName = (idPista) => {
-            const pista = pistas.value.find(p => p.idPista === idPista);
+            const pista = pistasStore.pistas.find(p => p.idPista === idPista);
             return pista ? pista.name : 'Desconocido';
         };
 
@@ -122,7 +122,7 @@ export default {
 
         return {
             sesiones,
-            pistas,
+            pistas: pistasStore.pistas,
             nuevaSesion,
             cargarSesiones,
             crearSesion,

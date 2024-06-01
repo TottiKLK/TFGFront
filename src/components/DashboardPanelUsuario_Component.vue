@@ -28,21 +28,19 @@
     </div>
 </template>
 
-
-
 <script>
 import { ref, onMounted } from 'vue';
-import { userService } from '../services/userService.js';
+import { useUserStore } from '@/stores/userStore';
 
 export default {
     name: 'DashboardPanelUsuarios',
     setup() {
-        const usuarios = ref([]);
+        const userStore = useUserStore();
         const nuevoUsuario = ref({ userName: '', email: '', password: '', rol: '', idUser: null });
 
         const cargarUsuarios = async () => {
             try {
-                usuarios.value = await userService.getUsers();
+                await userStore.fetchUsers();
             } catch (error) {
                 console.error('Error al cargar los usuarios:', error);
             }
@@ -50,8 +48,7 @@ export default {
 
         const crearUsuario = async () => {
             try {
-                const usuarioCreado = await userService.createUser(nuevoUsuario.value);
-                usuarios.value.push(usuarioCreado);
+                await userStore.createUser(nuevoUsuario.value);
                 nuevoUsuario.value = { userName: '', email: '', password: '', rol: '', idUser: null };
             } catch (error) {
                 console.error('Error al crear el usuario:', error);
@@ -61,14 +58,13 @@ export default {
         const editarUsuario = async () => {
             try {
                 console.log("Datos antes de actualizar:", nuevoUsuario.value);
-                const response = await userService.updateUser(nuevoUsuario.value.idUser, nuevoUsuario.value);
+                const response = await userStore.updateUser(nuevoUsuario.value.idUser, nuevoUsuario.value);
                 console.log("Respuesta de la API:", response); // Verificar la respuesta de la API
 
-                // Verificar que la respuesta no esté vacía y actualizar el usuario en la lista
                 if (response) {
-                    const index = usuarios.value.findIndex(u => u.idUser === nuevoUsuario.value.idUser);
+                    const index = userStore.usuarios.findIndex(u => u.idUser === nuevoUsuario.value.idUser);
                     if (index !== -1) {
-                        usuarios.value[index] = { ...usuarios.value[index], ...response };
+                        userStore.usuarios[index] = { ...userStore.usuarios[index], ...response };
                     }
                     nuevoUsuario.value = { userName: '', email: '', password: '', rol: '', idUser: null };
                     console.log("Usuario actualizado:", response);
@@ -80,11 +76,9 @@ export default {
             }
         };
 
-
         const handleEliminarUsuario = async (usuario) => {
             try {
-                await userService.deleteUser(usuario.idUser);
-                usuarios.value = usuarios.value.filter(u => u.idUser !== usuario.idUser);
+                await userStore.deleteUser(usuario.idUser);
             } catch (error) {
                 console.error('Error al eliminar el usuario:', error);
             }
@@ -105,7 +99,7 @@ export default {
         onMounted(cargarUsuarios);
 
         return {
-            usuarios,
+            usuarios: userStore.usuarios,
             nuevoUsuario,
             cargarUsuarios,
             crearUsuario,
@@ -114,7 +108,7 @@ export default {
             cargarUsuarioParaEdicion,
             convertRolToString
         };
-    },
+    }
 };
 </script>
 
@@ -136,7 +130,7 @@ export default {
     align-items: center;
 }
 
-.input,
+input,
 select,
 button {
     flex-grow: 1;
