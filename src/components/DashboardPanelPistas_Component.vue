@@ -29,12 +29,15 @@
 
 <script>
 import { ref, onMounted } from 'vue';
-import { fetchPistas, createPista, updatePista, deletePista } from '@/services/pistasService.js';
+import { usePistaStore } from '@/stores/pistaStore';
+import { storeToRefs } from 'pinia';
 
 export default {
     name: 'DashboardPanelPistas',
     setup() {
-        const pistas = ref([]);
+        const pistaStore = usePistaStore();
+        const { pistas } = storeToRefs(pistaStore);
+
         const nuevaPista = ref({
             name: '',
             description: '',
@@ -46,51 +49,37 @@ export default {
         });
 
         const cargarPistas = async () => {
-            try {
-                pistas.value = await fetchPistas();
-            } catch (error) {
-                console.error('Error al cargar las pistas:', error);
-            }
+            await pistaStore.fetchPistas();
         };
 
         const crearPista = async () => {
-            try {
-                const pistaCreada = await createPista(nuevaPista.value);
-                pistas.value.push(pistaCreada);
-                nuevaPista.value = { name: '', description: '', duration: '', price: '', date: '', photo: '', idPista: null };
-            } catch (error) {
-                console.error('Error al crear la pista:', error);
-            }
+            await pistaStore.createPista(nuevaPista.value);
+            resetNuevaPista();
         };
 
         const editarPista = async () => {
-            try {
-                const response = await updatePista(nuevaPista.value.idPista, nuevaPista.value);
-                if (response) {
-                    const index = pistas.value.findIndex(p => p.idPista === nuevaPista.value.idPista);
-                    if (index !== -1) {
-                        pistas.value[index] = { ...pistas.value[index], ...response };
-                    }
-                    nuevaPista.value = { name: '', description: '', duration: '', price: '', date: '', photo: '', idPista: null };
-                } else {
-                    console.error('La respuesta de la API está vacía');
-                }
-            } catch (error) {
-                console.error('Error al editar la pista:', error);
-            }
+            await pistaStore.updatePista(nuevaPista.value.idPista, nuevaPista.value);
+            resetNuevaPista();
         };
 
         const handleEliminarPista = async (pista) => {
-            try {
-                await deletePista(pista.idPista);
-                pistas.value = pistas.value.filter(p => p.idPista !== pista.idPista);
-            } catch (error) {
-                console.error('Error al eliminar la pista:', error);
-            }
+            await pistaStore.deletePista(pista.idPista);
         };
 
         const cargarPistaParaEdicion = (pista) => {
             nuevaPista.value = { ...pista };
+        };
+
+        const resetNuevaPista = () => {
+            nuevaPista.value = {
+                name: '',
+                description: '',
+                duration: '',
+                price: '',
+                date: '',
+                photo: '',
+                idPista: null
+            };
         };
 
         onMounted(cargarPistas);
@@ -102,7 +91,7 @@ export default {
             crearPista,
             editarPista,
             handleEliminarPista,
-            cargarPistaParaEdicion
+            cargarPistaParaEdicion,
         };
     }
 };
