@@ -19,7 +19,7 @@
         </form>
         <div class="producto-item" v-for="producto in productos" :key="producto.idProduct">
             <div class="detail-row">
-                <img :src="producto.product_Image" alt="Imagen del producto" class="product-image">
+                <img :src="producto.photo" alt="Imagen del producto" class="product-image">
                 <p>Nombre: {{ producto.name_Product }}</p>
                 <p>Descripción: {{ producto.product_Description }}</p>
                 <p>Precio: {{ producto.product_Price }}€</p>

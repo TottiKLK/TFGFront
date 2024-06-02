@@ -42,13 +42,14 @@
               </div>
           </div>
       </div>
-      <div v-if="showMessage" class="message">{{ message }}</div>
+      <ModalComponent :message="message" v-model:visible="showMessage" />
       <CartComponent :cart="cart" v-if="cartVisible" @toggle-cart="toggleCart" @remove-from-cart="removeFromCart" @buy-products="buyProducts" />
   </div>
 </template>
 
 <script>
 import CartComponent from './Cart_Component.vue';
+import ModalComponent from './PopupCarrito.vue';
 import { useProductStore } from '@/stores/productStore';
 import { storeToRefs } from 'pinia';
 import { onMounted, ref } from 'vue';
@@ -57,7 +58,8 @@ import { userService } from '@/services/userService.js';
 export default {
   name: 'ProductsComponent',
   components: {
-      CartComponent
+      CartComponent,
+      ModalComponent
   },
   setup() {
       const productStore = useProductStore();
@@ -96,7 +98,7 @@ export default {
                   name: product.name_Product,
                   description: product.product_Description,
                   price: product.product_Price,
-                  image: product.product_Image,
+                  image: product.photo,
                   quantity: 1
               });
           }

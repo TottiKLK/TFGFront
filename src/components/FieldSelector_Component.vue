@@ -3,7 +3,7 @@
     <h1>Zona de Partidos</h1>
     <div class="partidos-grid">
       <div class="partido-card" v-for="(match, index) in partidos" :key="index">
-        <img :src="match.imageUrl" alt="Imagen del partido" class="partido-image" />
+        <img :src="match.photo" alt="Imagen del partido" class="partido-image" />
         <h2>{{ match.name }}</h2>
         <p>{{ match.description }}</p>
         <p>Duración: {{ match.duration }}</p>
