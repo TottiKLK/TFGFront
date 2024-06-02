@@ -43,7 +43,10 @@ const emit = defineEmits(["toggle"]);
 
 .buttonplayer:hover:not(:disabled) > svg{
     color: #4d4646;
-    transform: translateY(-3px);
+}
+
+.buttonplayer:hover > svg {
+    transform: translateY(-6px);
 }
 
 .buttonplayer-notavailable > svg{

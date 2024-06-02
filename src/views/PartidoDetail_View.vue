@@ -2,13 +2,21 @@
   <div class="card" v-if="partido">
     <h1>{{ partido.name }}</h1>
     <p>{{ partido.description }}</p>
+    <img :src="partido.photo" alt="Imagen del Partido" class="partido-image" />
+    <div class="date-time">
+      {{ new Date(partido.date).toLocaleString() }}
+    </div>
+    <div class="stars">
+      <i v-for="star in parseInt(partido.estrellas)" :key="star" class="fas fa-star"></i>
+    </div>
     <div class="content-wrapper">
       <div class="field-wrapper">
         <Field_Component />
         <div class="fieldgrid">
-          <div v-for="(availablePosition, index) in availablePositions" :key="index" class="fielditem">
+          <div v-for="(player, index) in players" :key="index" :class="['fielditem', { reverse: index % 2 === 0 }]">
             <Player_Component @toggle="() => changeSelected(index)" :isSelected="selectedPlayer === index"
-              :notAvailable="!availablePosition" />
+              :notAvailable="player.status === 'reserved'" />
+            <span v-if="player.userName" class="player-name" :class="{ 'reverse-name': index % 2 === 0 }">{{ player.userName }}</span>
           </div>
         </div>
       </div>
@@ -37,29 +45,35 @@ import Player_Component from '@/components/Player_Component.vue';
 import { getCurrentUser } from '@/utils/auth';
 import { usePartidoStore } from '@/stores/partidoStore';
 import { storeToRefs } from 'pinia';
-import Swal from 'sweetalert2'; 
+import Swal from 'sweetalert2';
 
 const route = useRoute();
 const partidoStore = usePartidoStore();
 const { partido } = storeToRefs(partidoStore);
 
 const partidoId = computed(() => parseInt(route.params.id, 10));
-const availablePositions = ref([true, true, true, true]);
+const players = ref([
+  { id: 1, status: 'available', userName: null },
+  { id: 2, status: 'available', userName: null },
+  { id: 3, status: 'available', userName: null },
+  { id: 4, status: 'available', userName: null }
+]);
 const selectedPlayer = ref(null);
 
 const fetchPlayers = async () => {
   await partidoStore.fetchPartido(partidoId.value);
 
   try {
-    const players = await partidoStore.fetchUsuariosPartido(partidoId.value);
-    players.forEach((player) => {
-      availablePositions.value[player.position - 1] = false; 
+    const usuarios = await partidoStore.fetchUsuariosPartido(partidoId.value);
+    usuarios.forEach(usuario => {
+      players.value[usuario.position - 1].status = 'reserved';
+      players.value[usuario.position - 1].userName = usuario.userName;
     });
 
     const currentUser = getCurrentUser();
-    const player = players.find(player => player.userName === currentUser.userName);
+    const player = usuarios.find(player => player.userName === currentUser.userName);
     if (player) {
-      selectedPlayer.value = player.position - 1; 
+      selectedPlayer.value = player.position - 1;
     }
   } catch (error) {
     console.log('No hay jugadores para este partido');
@@ -68,22 +82,22 @@ const fetchPlayers = async () => {
 
 const handleReservePosition = async () => {
   if (selectedPlayer.value === null) {
-    alert('Seleccione una posición para reservar.');
+    Swal.fire('Seleccione una posición para reservar.', '', 'warning');
     return;
   }
 
   const currentUser = getCurrentUser();
   if (currentUser === null) {
-    alert('Por favor, inicia sesión antes de realizar una reserva.');
+    Swal.fire('Por favor, inicia sesión antes de realizar una reserva.', '', 'warning');
     return;
   }
 
   try {
-    const players = await partidoStore.fetchUsuariosPartido(partidoId.value);
-    if (players) {
-      const player = players.find(player => player.userName === currentUser.userName);
+    const usuarios = await partidoStore.fetchUsuariosPartido(partidoId.value);
+    if (usuarios) {
+      const player = usuarios.find(player => player.userName === currentUser.userName);
       if (player) {
-        alert('Ya tienes una reserva para este partido.');
+        Swal.fire('Ya tienes una reserva para este partido.', '', 'info');
         return;
       }
     }
@@ -92,8 +106,8 @@ const handleReservePosition = async () => {
   }
 
   try {
-    await partidoStore.reservePosition(partidoId.value, currentUser.idUser, selectedPlayer.value + 1); 
-    Swal.fire('Gracias por apuntarte', '¡Te esperamos allí!', 'success'); 
+    await partidoStore.reservePosition(partidoId.value, currentUser.idUser, selectedPlayer.value + 1);
+    Swal.fire('Gracias por apuntarte', '¡Te esperamos allí!', 'success');
   } catch (error) {
     console.error('Error reserving position:', error);
   }
@@ -104,33 +118,33 @@ const handleReservePosition = async () => {
 const handleUnreservePosition = async () => {
   const currentUser = getCurrentUser();
   if (currentUser === null) {
-    alert('Por favor, inicia sesión antes de realizar una cancelación.');
+    Swal.fire('Por favor, inicia sesión antes de realizar una cancelación.', '', 'warning');
     return;
   }
 
   try {
-    const players = await partidoStore.fetchUsuariosPartido(partidoId.value);
-    const player = players.find(player => player.userName === currentUser.userName);
+    const usuarios = await partidoStore.fetchUsuariosPartido(partidoId.value);
+    const player = usuarios.find(player => player.userName === currentUser.userName);
     if (!player) {
-      alert('No tienes una reserva para este partido.');
+      Swal.fire('No tienes una reserva para este partido.', '', 'info');
       return;
     }
 
     await partidoStore.unreservePosition(partidoId.value, currentUser.idUser);
     Swal.fire('Te has desapuntado del partido', '', 'info').then(() => {
-      window.location.reload(); 
-    }); 
+      window.location.reload();
+    });
   } catch (error) {
     console.error('Error canceling reservation:', error);
   }
 
   await fetchPlayers();
-  selectedPlayer.value = null; 
+  selectedPlayer.value = null;
 };
 
 function changeSelected(index) {
-  if (!availablePositions.value[index]) {
-    alert('Esta posición ya está ocupada.');
+  if (players.value[index].status === 'reserved') {
+    Swal.fire('Esta posición ya está ocupada.', '', 'info');
     return;
   }
   selectedPlayer.value = selectedPlayer.value === index ? null : index;
@@ -140,6 +154,8 @@ onMounted(fetchPlayers);
 </script>
 
 <style scoped>
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+
 body {
   font-family: 'Arial', sans-serif;
   background-color: #f4f4f9;
@@ -158,6 +174,35 @@ body {
   max-width: 900px;
   margin-left: auto;
   margin-right: auto;
+  transition: transform 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+}
+
+.partido-image {
+  max-width: 50%;
+  height: auto;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.date-time {
+  font-size: 1.2rem;
+  margin: 10px 0;
+  color: #555;
+}
+
+.stars {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.stars .fa-star {
+  color: #FFD700;
+  font-size: 24px;
+  margin: 0 5px;
 }
 
 .container {
@@ -190,23 +235,70 @@ body {
 
 .fieldgrid {
   display: grid;
-  width: 100%;
+  width: calc(100% - 60px);
   height: 100%;
   grid-template-rows: repeat(2, 1fr);
   grid-template-columns: repeat(2, 1fr);
   position: absolute;
   top: 0;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%)
 }
 
 .fielditem {
   display: flex;
   align-items: center;
-  margin: 10%;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+  transition: scale 0.3s, opacity 0.3s;
 }
 
 .fielditem:nth-child(odd) {
   transform: scaleX(-1);
+}
+
+.fielditem .player-name {
+  background: rgba(0,0,0,.5);
+  color: white;
+  padding: 0 8px;
+  border-radius: 6px;
+  bottom: 24px;
+  font-size: 12px;
+  font-weight: 500;
+  left: calc(50% - 6px);
+  translate: -50% 0;
+  text-transform: capitalize;
+  transition: background 0.3s;
+  pointer-events: none;
+  position: absolute;
+}
+
+.fielditem:nth-child(odd) .player-name {
+  transform: scaleX(-1);
+}
+
+.fielditem.reverse .player-name {
+  font-weight: 600;
+  text-transform: uppercase;
+  transition: scale 0.3s, background 0.3s;
+}
+
+.player-name {
+  margin-top: 5px;
+  font-size: 1rem;
+  color: #333;
+  transition: color 0.3s;
+}
+
+.reverse-name {
+  transform: rotate(0deg);
+  margin-top: 15px;
+}
+
+.fielditem:hover .player-name {
+  background: black;
+  scale: 1.1;
 }
 
 .buttons {
@@ -230,12 +322,22 @@ body {
   transition: background-color 0.3s, box-shadow 0.3s;
 }
 
+.unreserve-button {
+  background-color: #ff0000;
+}
+
 .back-button:hover,
 .reserve-button:hover,
 .unreserve-button:hover {
   background-color: #0056b3;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
 }
+
+.unreserve-button:hover {
+  background-color: #880000;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
 
 h1 {
   font-size: 3rem;
@@ -250,4 +352,10 @@ p {
   margin-bottom: 20px;
 }
 
+.fielditem span {
+  margin-top: 5px;
+  font-size: 1rem;
+  color: #333;
+  transition: color 0.3s;
+}
 </style>
