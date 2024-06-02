@@ -10,7 +10,7 @@
       <div class="products-display">
           <div v-show="activeCategory === 'Palas'" class="product-category">
               <div class="product-card" v-for="product in filteredProducts.palas" :key="product.idProduct">
-                  <img :src="product.product_Image" :alt="product.name_Product" class="product-image" />
+                  <img :src="product.photo" :alt="product.name_Product" class="product-image" />
                   <div class="product-info">
                       <h3 class="product-name">{{ product.name_Product }}</h3>
                       <p class="product-description">{{ product.product_Description }}</p>
@@ -21,7 +21,7 @@
           </div>
           <div v-show="activeCategory === 'Accesorios'" class="product-category">
               <div class="product-card" v-for="product in filteredProducts.accesorios" :key="product.idProduct">
-                  <img :src="product.product_Image" :alt="product.name_Product" class="product-image" />
+                  <img :src="product.photo" :alt="product.name_Product" class="product-image" />
                   <div class="product-info">
                       <h3 class="product-name">{{ product.name_Product }}</h3>
                       <p class="product-description">{{ product.product_Description }}</p>
@@ -32,7 +32,7 @@
           </div>
           <div v-show="activeCategory === 'Ropa'" class="product-category">
               <div class="product-card" v-for="product in filteredProducts.ropa" :key="product.idProduct">
-                  <img :src="product.product_Image" :alt="product.name_Product" class="product-image" />
+                  <img :src="product.photo" :alt="product.name_Product" class="product-image" />
                   <div class="product-info">
                       <h3 class="product-name">{{ product.name_Product }}</h3>
                       <p class="product-description">{{ product.product_Description }}</p>
