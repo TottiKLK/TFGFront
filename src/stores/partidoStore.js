@@ -6,7 +6,8 @@ import {
   updatePartido,
   deletePartido,
   fetchUsuariosPartido,
-  reservePosition
+  reservePosition,
+  DeleteUsuarioFromPartido
 } from '@/services/partidosService.js';
 
 export const usePartidoStore = defineStore('partido', {
@@ -100,6 +101,17 @@ export const usePartidoStore = defineStore('partido', {
       } finally {
         this.loading = false;
       }
-    }
+    },
+    async unreservePosition(partidoId, usuarioId) {
+      this.loading = true;
+      this.error = null;
+      try {
+        await DeleteUsuarioFromPartido(partidoId, usuarioId);
+      } catch (error) {
+        this.error = error;
+      } finally {
+        this.loading = false;
+      }
+    },
   },
 });

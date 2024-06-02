@@ -95,3 +95,16 @@ export async function deletePartido(id) {
     throw error;
   }
 }
+
+export async function DeleteUsuarioFromPartido(partidoId, usuarioId) {
+  try {
+    const response = await fetch(`${API_URL}/Partido/${partidoId}/usuarios/${usuarioId}`, {
+      method: 'DELETE'
+    });
+    if (!response.ok) throw new Error('Error deleting usuario from partido');
+    return await response.json();
+  } catch (error) {
+    console.error('Error al eliminar al usuario del partido:', error);
+    throw error;
+  }
+}

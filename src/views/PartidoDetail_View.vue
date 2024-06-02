@@ -14,7 +14,8 @@
       </div>
     </div>
     <div class="buttons">
-      <button class="reserve-button" @click="handleReservePosition">Reservar</button>
+      <button class="reserve-button" @click="handleReservePosition">Apuntarse</button>
+      <button class="unreserve-button" @click="handleUnreservePosition">Desapuntarse</button>
       <router-link to="/partidos">
         <button class="back-button">Volver</button>
       </router-link>
@@ -36,13 +37,14 @@ import Player_Component from '@/components/Player_Component.vue';
 import { getCurrentUser } from '@/utils/auth';
 import { usePartidoStore } from '@/stores/partidoStore';
 import { storeToRefs } from 'pinia';
+import Swal from 'sweetalert2'; 
 
 const route = useRoute();
 const partidoStore = usePartidoStore();
 const { partido } = storeToRefs(partidoStore);
 
 const partidoId = computed(() => parseInt(route.params.id, 10));
-const availablePositions = ref([true, true, true, true]); 
+const availablePositions = ref([true, true, true, true]);
 const selectedPlayer = ref(null);
 
 const fetchPlayers = async () => {
@@ -51,13 +53,13 @@ const fetchPlayers = async () => {
   try {
     const players = await partidoStore.fetchUsuariosPartido(partidoId.value);
     players.forEach((player) => {
-      availablePositions.value[player.position] = false;
+      availablePositions.value[player.position - 1] = false; 
     });
 
     const currentUser = getCurrentUser();
     const player = players.find(player => player.userName === currentUser.userName);
     if (player) {
-      selectedPlayer.value = player.position;
+      selectedPlayer.value = player.position - 1; 
     }
   } catch (error) {
     console.log('No hay jugadores para este partido');
@@ -90,13 +92,40 @@ const handleReservePosition = async () => {
   }
 
   try {
-    await partidoStore.reservePosition(partidoId.value, currentUser.idUser, selectedPlayer.value);
-    alert('Reserva realizada con éxito.');
+    await partidoStore.reservePosition(partidoId.value, currentUser.idUser, selectedPlayer.value + 1); 
+    Swal.fire('Gracias por apuntarte', '¡Te esperamos allí!', 'success'); 
   } catch (error) {
     console.error('Error reserving position:', error);
   }
 
   await fetchPlayers();
+};
+
+const handleUnreservePosition = async () => {
+  const currentUser = getCurrentUser();
+  if (currentUser === null) {
+    alert('Por favor, inicia sesión antes de realizar una cancelación.');
+    return;
+  }
+
+  try {
+    const players = await partidoStore.fetchUsuariosPartido(partidoId.value);
+    const player = players.find(player => player.userName === currentUser.userName);
+    if (!player) {
+      alert('No tienes una reserva para este partido.');
+      return;
+    }
+
+    await partidoStore.unreservePosition(partidoId.value, currentUser.idUser);
+    Swal.fire('Te has desapuntado del partido', '', 'info').then(() => {
+      window.location.reload(); 
+    }); 
+  } catch (error) {
+    console.error('Error canceling reservation:', error);
+  }
+
+  await fetchPlayers();
+  selectedPlayer.value = null; 
 };
 
 function changeSelected(index) {
@@ -187,7 +216,8 @@ body {
 }
 
 .back-button,
-.reserve-button {
+.reserve-button,
+.unreserve-button {
   display: block;
   margin: 20px auto;
   padding: 10px 20px;
@@ -201,7 +231,8 @@ body {
 }
 
 .back-button:hover,
-.reserve-button:hover {
+.reserve-button:hover,
+.unreserve-button:hover {
   background-color: #0056b3;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
 }
@@ -218,4 +249,5 @@ p {
   color: #555;
   margin-bottom: 20px;
 }
+
 </style>
