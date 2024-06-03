@@ -92,7 +92,7 @@ export default {
 
 .search-bar:focus {
   border-color: #50a4c5;
-  box-shadow: 0 0 15px rgba(4, 0, 255, 0.5);
+  box-shadow: 0 0 15px #f28d35;
 }
 
 .animated-input {
@@ -117,7 +117,7 @@ export default {
 
 .partido-card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 0 15px rgba(4, 0, 255, 0.5);
+  box-shadow: 0 0 15px #f28d35;
 }
 
 .partido-image {
@@ -127,20 +127,20 @@ export default {
 }
 
 button {
-  display: block;
   width: 100%;
   padding: 10px;
-  background-color: #007bff;
+  background-color: #f28d35;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   margin-top: 10px;
   transition: background-color 0.3s ease-in-out;
+  text-decoration: none !important;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #fd7600;
 }
 
 .animated-card {

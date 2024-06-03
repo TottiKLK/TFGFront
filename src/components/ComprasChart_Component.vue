@@ -18,6 +18,11 @@
         try {
           await userStore.getAllCompras();
   
+          if (!Array.isArray(userStore.compras) || userStore.compras.length === 0) {
+            console.error('No hay compras disponibles.');
+            return;
+          }
+  
           const comprasData = userStore.compras.map(compra => ({
             usuario: compra.userName,
             total: compra.productos.reduce((sum, prod) => sum + prod.precioTotal, 0)
@@ -31,12 +36,17 @@
               datasets: [{
                 label: 'Dinero gastado en Compras',
                 data: comprasData.map(data => data.total),
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1
               }]
             },
             options: {
+              responsive: true,
+              animation: {
+                duration: 2000,
+                easing: 'easeOutBounce'
+              },
               scales: {
                 y: {
                   beginAtZero: true

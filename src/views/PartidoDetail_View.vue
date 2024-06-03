@@ -310,10 +310,9 @@ body {
 .back-button,
 .reserve-button,
 .unreserve-button {
-  display: block;
   margin: 20px auto;
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #f28d35;
   color: white;
   border: none;
   border-radius: 10px;
@@ -329,7 +328,7 @@ body {
 .back-button:hover,
 .reserve-button:hover,
 .unreserve-button:hover {
-  background-color: #0056b3;
+  background-color: #fd7600;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
 }
 
