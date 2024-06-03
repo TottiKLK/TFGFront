@@ -19,13 +19,16 @@
           <select v-model="selectedSesiones[court.idPista]" @change="handleSessionChange(court.idPista)"
             class="session-select">
             <option value="">Selecciona una sesión</option>
-            <option v-for="sesion in sesionesFiltradas(court.idPista)" :key="sesion.idSesion" :value="sesion.idSesion"
-              :disabled="sesion.reservada">
-              {{ sesion.sesionTime }} <span v-if="sesion.reservada">(Reservada)</span>
+            <option v-for="sesion in sesionesFiltradas(court.idPista)" :key="sesion.idSesion" :value="sesion.idSesion">
+              {{ sesion.sesionTime }}
+            </option>
+            <!-- Opciones reservadas (opcional) -->
+            <option v-for="sesion in sesionesReservadas(court.idPista)" :key="sesion.idSesion" :value="sesion.idSesion"
+              disabled>
+              {{ sesion.sesionTime }} - Reservada
             </option>
           </select>
-          <button class="reserve-button" @click="reservar(court.idPista)"
-            :disabled="!selectedSesiones[court.idPista] || isSessionReserved(court.idPista)">
+          <button class="reserve-button" @click="reservar(court.idPista)" :disabled="!selectedSesiones[court.idPista]">
             RESERVAR
           </button>
         </div>
@@ -46,7 +49,7 @@ import { ref, onMounted, watch } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { fetchPistas, fetchSesiones } from '@/services/pistasService.js';
-import { createReserva } from '@/services/reservasService.js';
+import { createReserva, updateSesion } from '@/services/reservasService.js';
 
 export default {
   name: 'ReservationPage',
@@ -78,7 +81,7 @@ export default {
             ...s,
             sesionTime: s.sesionTime ? String(s.sesionTime) : 'Hora no disponible',
             date: s.date ? s.date : new Date().toISOString().substr(0, 10),
-            reservada: s.reservada
+            reservada: s.reservado
           }));
         });
         await Promise.all(sesionesPromises);
@@ -87,23 +90,26 @@ export default {
       }
     };
 
+
     const sesionesFiltradas = (pistaId) => {
       return sesiones.value[pistaId]
-        ? sesiones.value[pistaId].filter(s => formatearFecha(s.sesionDate) === formatearNewFecha(selectedDate.value))
+        ? sesiones.value[pistaId].filter(s => formatearFecha(s.sesionDate) === formatearNewFecha(selectedDate.value) && !s.reservada)
         : [];
     };
 
+    const sesionesReservadas = (pistaId) => {
+      return sesiones.value[pistaId]
+        ? sesiones.value[pistaId].filter(s => formatearFecha(s.sesionDate) === formatearNewFecha(selectedDate.value) && s.reservada)
+        : [];
+    };
     const formatearFecha = (fecha) => {
       const date = new Date(fecha);
-
       const formattedDate = date.toISOString().split('T')[0];
-
       return formattedDate;
     }
 
     const formatearNewFecha = (fecha) => {
-      if(typeof fecha == "string") return fecha;
-
+      if (typeof fecha == "string") return fecha;
       const year = fecha.getFullYear();
       const month = String(fecha.getMonth() + 1).padStart(2, '0');
       const day = String(fecha.getDate()).padStart(2, '0');
@@ -126,7 +132,18 @@ export default {
           };
           console.log('Reserva a enviar:', reserva);
           await createReserva(reserva);
+
+          // Actualizar el estado de la sesión en la base de datos
+          await updateSesion(sesionId, { reservado: true });
+
           console.log(`Reserva realizada para la pista ${pistaId}, sesión ${sesionId}`);
+
+          // Actualizar el estado local de la sesión a reservada
+          const sesion = sesiones.value[pistaId].find(s => s.idSesion === sesionId);
+          if (sesion) {
+            sesion.reservada = true;
+          }
+
           showPopup.value = true;
           await cargarSesiones();
         } catch (error) {
@@ -164,7 +181,8 @@ export default {
       showPopup,
       closePopup,
       selectedDate,
-      isSessionReserved
+      isSessionReserved,
+      sesionesReservadas
     };
   }
 };
@@ -186,8 +204,7 @@ export default {
 }
 
 .date-picker {
-  margin-bottom:
-    20px;
+  margin-bottom: 20px;
 }
 
 .courts-container {
