@@ -16,13 +16,16 @@
           <h3>{{ court.name }}</h3>
           <p>{{ court.description }}</p>
           <p>Precio: {{ court.price }}€</p>
-          <select v-model="selectedSesiones[court.idPista]" @change="handleSessionChange(court.idPista)" class="session-select">
+          <select v-model="selectedSesiones[court.idPista]" @change="handleSessionChange(court.idPista)"
+            class="session-select">
             <option value="">Selecciona una sesión</option>
-            <option v-for="sesion in sesionesFiltradas(court.idPista)" :key="sesion.idSesion" :value="sesion.idSesion" :disabled="sesion.reservada">
+            <option v-for="sesion in sesionesFiltradas(court.idPista)" :key="sesion.idSesion" :value="sesion.idSesion"
+              :disabled="sesion.reservada">
               {{ sesion.sesionTime }} <span v-if="sesion.reservada">(Reservada)</span>
             </option>
           </select>
-          <button class="reserve-button" @click="reservar(court.idPista)" :disabled="!selectedSesiones[court.idPista] || isSessionReserved(court.idPista)">
+          <button class="reserve-button" @click="reservar(court.idPista)"
+            :disabled="!selectedSesiones[court.idPista] || isSessionReserved(court.idPista)">
             RESERVAR
           </button>
         </div>
@@ -75,7 +78,7 @@ export default {
             ...s,
             sesionTime: s.sesionTime ? String(s.sesionTime) : 'Hora no disponible',
             date: s.date ? s.date : new Date().toISOString().substr(0, 10),
-            reservada: s.reservada 
+            reservada: s.reservada
           }));
         });
         await Promise.all(sesionesPromises);
@@ -86,9 +89,26 @@ export default {
 
     const sesionesFiltradas = (pistaId) => {
       return sesiones.value[pistaId]
-        ? sesiones.value[pistaId].filter(s => s.date === selectedDate.value)
+        ? sesiones.value[pistaId].filter(s => formatearFecha(s.sesionDate) === formatearNewFecha(selectedDate.value))
         : [];
     };
+
+    const formatearFecha = (fecha) => {
+      const date = new Date(fecha);
+
+      const formattedDate = date.toISOString().split('T')[0];
+
+      return formattedDate;
+    }
+
+    const formatearNewFecha = (fecha) => {
+      if(typeof fecha == "string") return fecha;
+
+      const year = fecha.getFullYear();
+      const month = String(fecha.getMonth() + 1).padStart(2, '0');
+      const day = String(fecha.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
 
     const handleSessionChange = (pistaId) => {
       console.log('Sesión seleccionada para la pista', pistaId, ':', selectedSesiones.value[pistaId]);
@@ -108,7 +128,7 @@ export default {
           await createReserva(reserva);
           console.log(`Reserva realizada para la pista ${pistaId}, sesión ${sesionId}`);
           showPopup.value = true;
-          await cargarSesiones(); 
+          await cargarSesiones();
         } catch (error) {
           console.error('Error creating reserva:', error);
           alert('Error al realizar la reserva');
@@ -131,7 +151,7 @@ export default {
     onMounted(cargarPistas);
 
     watch(selectedDate, () => {
-      cargarSesiones(); 
+      cargarSesiones();
     });
 
     return {
@@ -166,8 +186,8 @@ export default {
 }
 
 .date-picker {
-  margin-bottom: 
-  20px;
+  margin-bottom:
+    20px;
 }
 
 .courts-container {
@@ -298,6 +318,7 @@ export default {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -307,6 +328,7 @@ export default {
   from {
     transform: scale(0.8);
   }
+
   to {
     transform: scale(1);
   }

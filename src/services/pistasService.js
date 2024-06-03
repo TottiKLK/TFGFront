@@ -15,7 +15,7 @@ export const fetchPistas = async () => {
 
 export const fetchSesiones = async (pistaId) => {
     try {
-        const response = await fetch(`${API_URL}/Sesion?pistaId=${pistaId}`);
+        const response = await fetch(`${API_URL}/Sesion/Pista/${pistaId}`);
         if (!response.ok) {
             throw new Error('Error fetching sesiones');
         }
