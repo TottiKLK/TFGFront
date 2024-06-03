@@ -1,8 +1,10 @@
 <template>
   <div class="container">
     <h1>Zona de Partidos</h1>
+    <!-- Añadir el campo de búsqueda con animaciones y estilos -->
+    <input v-model="searchQuery" @input="filterPartidos" placeholder="Buscar por descripción" class="search-bar animated-input" />
     <div class="partidos-grid">
-      <div class="partido-card" v-for="(match, index) in partidos" :key="index">
+      <div class="partido-card animated-card" v-for="(match, index) in filteredPartidos" :key="index">
         <img :src="match.photo" alt="Imagen del partido" class="partido-image" />
         <h2>{{ match.name }}</h2>
         <p>{{ match.description }}</p>
@@ -18,7 +20,7 @@
 </template>
 
 <script>
-import { onMounted } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { usePartidoStore } from '@/stores/partidoStore';
 import { storeToRefs } from 'pinia';
 
@@ -27,17 +29,48 @@ export default {
   setup() {
     const partidoStore = usePartidoStore();
     const { partidos } = storeToRefs(partidoStore);
+    const searchQuery = ref('');
 
     onMounted(async () => {
       await partidoStore.fetchPartidos();
     });
 
-    return { partidos };
+    const filteredPartidos = computed(() => {
+      return partidos.value.filter(match => 
+        match.description.toLowerCase().includes(searchQuery.value.toLowerCase())
+      );
+    });
+
+    const filterPartidos = () => {
+      filteredPartidos.value;
+    };
+
+    return { partidos, searchQuery, filteredPartidos, filterPartidos };
   }
 };
 </script>
 
 <style scoped>
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 .container {
   width: 80%;
   margin: auto;
@@ -45,6 +78,25 @@ export default {
   text-align: center;
   padding: 20px;
   margin-top: 9%;
+}
+
+.search-bar {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar:focus {
+  border-color: #50a4c5;
+  box-shadow: 0 0 15px rgba(4, 0, 255, 0.5);
+}
+
+.animated-input {
+  animation: fadeIn 0.5s ease-in-out;
 }
 
 .partidos-grid {
@@ -60,6 +112,12 @@ export default {
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: left;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.partido-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 0 15px rgba(4, 0, 255, 0.5);
 }
 
 .partido-image {
@@ -78,9 +136,14 @@ button {
   border-radius: 5px;
   cursor: pointer;
   margin-top: 10px;
+  transition: background-color 0.3s ease-in-out;
 }
 
 button:hover {
   background-color: #0056b3;
+}
+
+.animated-card {
+  animation: slideIn 0.5s ease-in-out;
 }
 </style>

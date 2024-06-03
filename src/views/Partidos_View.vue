@@ -9,8 +9,6 @@
 import Navbar from '@/components/Navbar_Component.vue';
 import FieldSelector_Component from '@/components/FieldSelector_Component.vue';
 
-console.log("hola");
-
 export default {
     name: 'PartidosView',
     components: {
