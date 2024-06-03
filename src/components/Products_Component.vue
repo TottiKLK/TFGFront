@@ -1,49 +1,49 @@
 <template>
   <div class="products-section">
-      <h1 class="title">Nuestros Productos</h1>
-      <nav class="products-nav">
-          <button v-for="category in categories" :key="category" :class="{ active: activeCategory === category }" @click="setActiveCategory(category)">
-              {{ category }}
-          </button>
-          <img class="cart-icon" @click="toggleCart" src="@/assets/imagen_carrito.png" alt="Carrito de compras" />
-      </nav>
-      <div class="products-display">
-          <div v-show="activeCategory === 'Palas'" class="product-category">
-              <div class="product-card" v-for="product in filteredProducts.palas" :key="product.idProduct">
-                  <img :src="product.photo" :alt="product.name_Product" class="product-image" />
-                  <div class="product-info">
-                      <h3 class="product-name">{{ product.name_Product }}</h3>
-                      <p class="product-description">{{ product.product_Description }}</p>
-                      <p class="product-price">{{ product.product_Price }}€</p>
-                      <button @click="addToCart(product)" class="product-button">Añadir al carrito</button>
-                  </div>
-              </div>
+    <h1 class="title">Nuestros Productos</h1>
+    <nav class="products-nav">
+      <button v-for="category in categories" :key="category" :class="{ active: activeCategory === category }" @click="setActiveCategory(category)">
+        {{ category }}
+      </button>
+      <img class="cart-icon" @click="toggleCart" src="@/assets/imagen_carrito.png" alt="Carrito de compras" />
+    </nav>
+    <div class="products-display">
+      <div v-show="activeCategory === 'Palas'" class="product-category">
+        <div class="product-card" v-for="product in filteredProducts.palas" :key="product.idProduct">
+          <img :src="product.photo" :alt="product.name_Product" class="product-image" />
+          <div class="product-info">
+            <h3 class="product-name">{{ product.name_Product }}</h3>
+            <p class="product-description">{{ product.product_Description }}</p>
+            <p class="product-price">{{ product.product_Price }}€</p>
+            <button @click="addToCart(product)" class="product-button">Añadir al carrito</button>
           </div>
-          <div v-show="activeCategory === 'Accesorios'" class="product-category">
-              <div class="product-card" v-for="product in filteredProducts.accesorios" :key="product.idProduct">
-                  <img :src="product.photo" :alt="product.name_Product" class="product-image" />
-                  <div class="product-info">
-                      <h3 class="product-name">{{ product.name_Product }}</h3>
-                      <p class="product-description">{{ product.product_Description }}</p>
-                      <p class="product-price">{{ product.product_Price }}€</p>
-                      <button @click="addToCart(product)" class="product-button">Añadir al carrito</button>
-                  </div>
-              </div>
-          </div>
-          <div v-show="activeCategory === 'Ropa'" class="product-category">
-              <div class="product-card" v-for="product in filteredProducts.ropa" :key="product.idProduct">
-                  <img :src="product.photo" :alt="product.name_Product" class="product-image" />
-                  <div class="product-info">
-                      <h3 class="product-name">{{ product.name_Product }}</h3>
-                      <p class="product-description">{{ product.product_Description }}</p>
-                      <p class="product-price">{{ product.product_Price }}€</p>
-                      <button @click="addToCart(product)" class="product-button">Añadir al carrito</button>
-                  </div>
-              </div>
-          </div>
+        </div>
       </div>
-      <ModalComponent :message="message" v-model:visible="showMessage" />
-      <CartComponent :cart="cart" v-if="cartVisible" @toggle-cart="toggleCart" @remove-from-cart="removeFromCart" @buy-products="buyProducts" />
+      <div v-show="activeCategory === 'Accesorios'" class="product-category">
+        <div class="product-card" v-for="product in filteredProducts.accesorios" :key="product.idProduct">
+          <img :src="product.photo" :alt="product.name_Product" class="product-image" />
+          <div class="product-info">
+            <h3 class="product-name">{{ product.name_Product }}</h3>
+            <p class="product-description">{{ product.product_Description }}</p>
+            <p class="product-price">{{ product.product_Price }}€</p>
+            <button @click="addToCart(product)" class="product-button">Añadir al carrito</button>
+          </div>
+        </div>
+      </div>
+      <div v-show="activeCategory === 'Ropa'" class="product-category">
+        <div class="product-card" v-for="product in filteredProducts.ropa" :key="product.idProduct">
+          <img :src="product.photo" :alt="product.name_Product" class="product-image" />
+          <div class="product-info">
+            <h3 class="product-name">{{ product.name_Product }}</h3>
+            <p class="product-description">{{ product.product_Description }}</p>
+            <p class="product-price">{{ product.product_Price }}€</p>
+            <button @click="addToCart(product)" class="product-button">Añadir al carrito</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ModalComponent :message="message" v-model:visible="showMessage" />
+    <CartComponent :cart="cart" v-if="cartVisible" @toggle-cart="toggleCart" @remove-from-cart="removeFromCart" @buy-products="buyProducts" />
   </div>
 </template>
 
@@ -54,117 +54,135 @@ import { useProductStore } from '@/stores/productStore';
 import { storeToRefs } from 'pinia';
 import { onMounted, ref } from 'vue';
 import { userService } from '@/services/userService.js';
+import emailjs from 'emailjs-com';
 
 export default {
   name: 'ProductsComponent',
   components: {
-      CartComponent,
-      ModalComponent
+    CartComponent,
+    ModalComponent
   },
   setup() {
-      const productStore = useProductStore();
-      const { products, loading, error } = storeToRefs(productStore);
+    const productStore = useProductStore();
+    const { products, loading, error } = storeToRefs(productStore);
 
-      const categories = ref(['Palas', 'Accesorios', 'Ropa']);
-      const activeCategory = ref('Palas');
-      const filteredProducts = ref({
-          palas: [],
-          accesorios: [],
-          ropa: []
-      });
-      const cart = ref([]);
-      const cartVisible = ref(false);
-      const showMessage = ref(false);
-      const message = ref('');
+    const categories = ref(['Palas', 'Accesorios', 'Ropa']);
+    const activeCategory = ref('Palas');
+    const filteredProducts = ref({
+      palas: [],
+      accesorios: [],
+      ropa: []
+    });
+    const cart = ref([]);
+    const cartVisible = ref(false);
+    const showMessage = ref(false);
+    const message = ref('');
 
-      const setActiveCategory = (category) => {
-          activeCategory.value = category;
-          filterProducts();
+    const setActiveCategory = (category) => {
+      activeCategory.value = category;
+      filterProducts();
+    };
+
+    const filterProducts = () => {
+      filteredProducts.value.palas = products.value.filter(product => product.idCategoria === 1);
+      filteredProducts.value.accesorios = products.value.filter(product => product.idCategoria === 2);
+      filteredProducts.value.ropa = products.value.filter(product => product.idCategoria === 3);
+    };
+
+    const addToCart = (product) => {
+      const cartProduct = cart.value.find(item => item.idProduct === product.idProduct);
+      if (cartProduct) {
+        cartProduct.quantity++;
+      } else {
+        cart.value.push({
+          idProduct: product.idProduct,
+          name: product.name_Product,
+          description: product.product_Description,
+          price: product.product_Price,
+          image: product.photo,
+          quantity: 1
+        });
+      }
+      message.value = `${product.name_Product} añadido al carrito!`;
+      showMessage.value = true;
+      setTimeout(() => {
+        showMessage.value = false;
+      }, 3000);
+    };
+
+    const toggleCart = () => {
+      cartVisible.value = !cartVisible.value;
+    };
+
+    const removeFromCart = (index) => {
+      cart.value.splice(index, 1);
+    };
+
+    const buyProducts = async () => {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (!currentUser) {
+        alert('Debes iniciar sesión para realizar una compra');
+        return;
+      }
+
+      try {
+        const purchaseData = {
+          userId: currentUser.idUser,
+          productos: cart.value.map(product => ({
+            productId: product.idProduct,
+            quantity: product.quantity
+          }))
+        };
+        await userService.buyProducts(purchaseData);
+        sendEmail(currentUser.email, cart.value);
+        cart.value = [];
+        message.value = 'Compra realizada con éxito';
+        showMessage.value = true;
+        setTimeout(() => {
+          showMessage.value = false;
+        }, 3000);
+      } catch (error) {
+        console.error('Error al realizar la compra:', error);
+      }
+    };
+
+    const sendEmail = (email, cart) => {
+      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const templateParams = {
+        to_email: email,
+        message: JSON.stringify(cart, null, 2),
+        total: total
       };
 
-      const filterProducts = () => {
-          filteredProducts.value.palas = products.value.filter(product => product.idCategoria === 1);
-          filteredProducts.value.accesorios = products.value.filter(product => product.idCategoria === 2);
-          filteredProducts.value.ropa = products.value.filter(product => product.idCategoria === 3);
-      };
+      emailjs.send('TFG_gmail', 'template_k7jhm9k', templateParams, 'ivcF6aL9qoqeXdN0W')
+        .then((response) => {
+          console.log('SUCCESS!', response.status, response.text);
+        }, (error) => {
+          console.log('FAILED...', error);
+        });
+    };
 
-      const addToCart = (product) => {
-          const cartProduct = cart.value.find(item => item.idProduct === product.idProduct);
-          if (cartProduct) {
-              cartProduct.quantity++;
-          } else {
-              cart.value.push({
-                  idProduct: product.idProduct,
-                  name: product.name_Product,
-                  description: product.product_Description,
-                  price: product.product_Price,
-                  image: product.photo,
-                  quantity: 1
-              });
-          }
-          message.value = `${product.name_Product} añadido al carrito!`;
-          showMessage.value = true;
-          setTimeout(() => {
-              showMessage.value = false;
-          }, 3000);
-      };
+    onMounted(async () => {
+      await productStore.fetchProducts();
+      filterProducts();
+    });
 
-      const toggleCart = () => {
-          cartVisible.value = !cartVisible.value;
-      };
-
-      const removeFromCart = (index) => {
-          cart.value.splice(index, 1);
-      };
-
-      const buyProducts = async () => {
-          const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-          if (!currentUser) {
-              alert('Debes iniciar sesión para realizar una compra');
-              return;
-          }
-
-          try {
-              const purchaseData = {
-                  userId: currentUser.idUser,
-                  productos: cart.value.map(product => ({
-                      productId: product.idProduct,
-                      quantity: product.quantity
-                  }))
-              };
-              await userService.buyProducts(purchaseData);
-              cart.value = [];
-              message.value = 'Compra realizada con éxito';
-              showMessage.value = true;
-              setTimeout(() => {
-                  showMessage.value = false;
-              }, 3000);
-          } catch (error) {
-              console.error('Error al realizar la compra:', error);
-          }
-      };
-
-      onMounted(async () => {
-          await productStore.fetchProducts();
-          filterProducts();
-      });
-
-      return {
-          categories,
-          activeCategory,
-          filteredProducts,
-          cart,
-          cartVisible,
-          showMessage,
-          message,
-          setActiveCategory,
-          addToCart,
-          toggleCart,
-          removeFromCart,
-          buyProducts,
-          loading,
-          error
-      };
+    return {
+      categories,
+      activeCategory,
+      filteredProducts,
+      cart,
+      cartVisible,
+      showMessage,
+      message,
+      setActiveCategory,
+      addToCart,
+      toggleCart,
+      removeFromCart,
+      buyProducts,
+      loading,
+      error
+    };
   }
 };
 </script>
@@ -309,15 +327,15 @@ export default {
 
 @media (max-width: 768px) {
   .products-nav {
-      flex-direction: column;
+    flex-direction: column;
   }
 
   .products-nav button {
-      margin: 0.5rem 0;
+    margin: 0.5rem 0;
   }
 
   .products-display {
-      flex-direction: column;
+    flex-direction: column;
   }
 }
 </style>
