@@ -57,6 +57,8 @@
 </template>
 
 <script>
+import emailjs from 'emailjs-com';
+
 export default {
   name: 'CartComponent',
   props: {
@@ -95,18 +97,29 @@ export default {
       this.showForm = false;
     },
     async submitForm() {
+      const templateParams = {
+        name: this.form.name,
+        email: this.form.email,
+        address: this.form.address,
+        payment: this.form.payment,
+        total: this.total,
+        cart: this.cart.map(product => `${product.name} (Cantidad: ${product.quantity}, Precio: ${product.price}€)`).join(', ')
+      };
+
       try {
-        await this.$emit('buy-products', this.form);
+        await emailjs.send('TFG_gmail', 'template_k7jhm9k', templateParams, 'ivcF6aL9qoqeXdN0W');
+        alert('Correo enviado con éxito');
         this.closePurchaseForm();
         this.toggleCart();
       } catch (error) {
-        console.error('Error al realizar la compra:', error);
-        alert('Error al realizar la compra');
+        console.error('Error al enviar el correo:', error);
+        alert('Error al enviar el correo');
       }
     }
   }
 };
 </script>
+
 
 <style scoped>
 .cart-dropdown {
