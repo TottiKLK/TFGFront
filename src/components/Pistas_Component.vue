@@ -46,7 +46,7 @@ import { ref, onMounted, watch } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { fetchPistas, fetchSesiones } from '@/services/pistasService.js';
-import { createReserva } from '@/services/reservasService.js';
+import { updateSesion } from '@/services/sesionesService.js'
 
 export default {
   name: 'ReservationPage',
@@ -58,7 +58,6 @@ export default {
     const sesiones = ref({});
     const selectedSesiones = ref({});
     const selectedDate = ref(new Date().toISOString().substr(0, 10));
-    const currentUser = ref(JSON.parse(localStorage.getItem('currentUser')));
     const showPopup = ref(false);
 
     const cargarPistas = async () => {
@@ -102,7 +101,7 @@ export default {
     }
 
     const formatearNewFecha = (fecha) => {
-      if(typeof fecha == "string") return fecha;
+      if (typeof fecha == "string") return fecha;
 
       const year = fecha.getFullYear();
       const month = String(fecha.getMonth() + 1).padStart(2, '0');
@@ -115,29 +114,30 @@ export default {
     };
 
     const reservar = async (pistaId) => {
-      const sesionId = selectedSesiones.value[pistaId];
-      if (sesionId) {
+    const sesionId = selectedSesiones.value[pistaId];
+    if (sesionId) {
         try {
-          const reserva = {
-            idUser: currentUser.value.idUser,
-            idSesion: sesionId,
-            reservationDate: new Date().toISOString(),
-            reservationPrice: courts.value.find(court => court.idPista === pistaId).price.toString()
-          };
-          console.log('Reserva a enviar:', reserva);
-          await createReserva(reserva);
-          console.log(`Reserva realizada para la pista ${pistaId}, sesión ${sesionId}`);
-          showPopup.value = true;
-          await cargarSesiones();
+            const sesion = sesiones.value[pistaId].find(s => s.idSesion === sesionId);
+            if (sesion) {
+                sesion.reservada = true;
+            }
+
+            console.log('Reserva a enviar:', sesion);
+            await updateSesion(sesionId, sesion);
+            console.log(`Reserva realizada para la pista ${pistaId}, sesión ${sesionId}`);
+
+            showPopup.value = true;
+            await cargarSesiones();
         } catch (error) {
-          console.error('Error creating reserva:', error);
-          alert('Error al realizar la reserva');
+            console.error('Error creating reserva:', error);
+            alert('Error al realizar la reserva');
         }
-      } else {
+    } else {
         console.log('Seleccione una sesión antes de reservar');
         alert('Seleccione una sesión antes de reservar');
-      }
-    };
+    }
+};
+
 
     const isSessionReserved = (pistaId) => {
       const sesionId = selectedSesiones.value[pistaId];
@@ -164,7 +164,8 @@ export default {
       showPopup,
       closePopup,
       selectedDate,
-      isSessionReserved
+      isSessionReserved,
+      updateSesion,
     };
   }
 };

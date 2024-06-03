@@ -22,8 +22,14 @@ export const createSesion = async (sesion) => {
 };
 
 export const updateSesion = async (id, sesion) => {
+    console.log(sesion
+    )
     try {
-        const response = await axios.put(`${API_URL}/Sesion/${id}`, sesion);
+        const response = await axios.put(`${API_URL}/Sesion/${id}`, sesion, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
         return response.data;
     } catch (error) {
         console.error('Error updating sesion:', error.response ? error.response.data : error.message);
