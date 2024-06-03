@@ -12,6 +12,7 @@
                 <li><router-link to="/productointranet">Productos</router-link></li>
                 <li><router-link to="/pistaintranet">Pistas</router-link></li>
                 <li><router-link to="/sesionintranet">Sesiones</router-link></li>
+                <li><router-link to="/grafica-compras">Gráfica de Compras</router-link></li> <!-- Nuevo enlace -->
             </ul>
         </div>
 

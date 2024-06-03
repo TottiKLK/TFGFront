@@ -104,6 +104,19 @@ export const useUserStore = defineStore('user', {
                 throw error;
             }
         },
+        async getAllCompras() {
+            try {
+                const response = await fetch(`${API_URL}/compras`);
+                if (!response.ok) {
+                    const errorDetails = await response.text();
+                    throw new Error(`Error fetching all user purchases: ${errorDetails}`);
+                }
+                this.compras = await response.json();
+            } catch (error) {
+                console.error('Error fetching all user purchases:', error);
+                throw error;
+            }
+        },
         async deleteUserPurchase(userId, compraId) {
             try {
                 const response = await fetch(`${API_URL}/${userId}/compras/${compraId}`, {

@@ -233,5 +233,18 @@ a{
     margin-right: 10px;
     transform: rotate(180deg);
 }
+
+.panel-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .icono {
+    font-size: 50px;
+    color: var(--color-2);
+  }
+  
 </style>
   

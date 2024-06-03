@@ -24,90 +24,96 @@ import PistaIntranet from '@/views/PistaIntranetView.vue';
 import SesionIntranet from '@/views/SesionIntranetView.vue';
 import PartidoIntranetView from '@/views/PartidoIntranetView.vue';
 import IntranetOwner from '@/views/IntranetOwner_View.vue';
+import GraficaComprasView from '@/views/GraficaComprasView.vue';
 import i18n from './i18n';
 
 const routes = [
-    {
-        path: '/',
-        name: 'homeview',
-        component: HomeView
-    }, 
-    {
-        path: '/reservas',
-        name: 'reservas',
-        component: ReservasView,
-    },
-    {
-        path: '/perfil',
-        name: 'perfil',
-        component: PerfilView,
-    },
-    {
-        path: '/sobrenosotros',
-        name: 'sobrenosotros',
-        component: SobreNosotros,
-    },
-    {
-        path: '/products',
-        name: 'products',
-        component: Products,
-    },
-    {
-        path: '/partidos',
-        name: 'partidos',
-        component: PartidosView,
-    },
-    {
-        path: '/partido/:id',
-        name: 'PartidoDetailView',
-        component: PartidoDetailView,
-        props: true
-    },
-    {
-        path: '/intranet',
-        name: 'Intranet',
-        component: Intranet,
-    },
-    {
-        path: '/usuariointranet',
-        name: 'UsuarioIntranet',
-        component: UsuarioIntranet,
-    },
-    {
-        path: '/userprofile',
-        name: 'UserProfile',
-        component: UserProfile,
-    },
-    {
-        path: '/productointranet',
-        name: 'ProductoIntranet',
-        component: ProductoIntranet,
-    },
-    {
-        path: '/pistaintranet',
-        name: 'PistaIntranet',
-        component: PistaIntranet,
-    },
-    {
-        path: '/sesionintranet',
-        name: 'SesionIntranet',
-        component: SesionIntranet,
-    },
-    {
-        path: '/partidointranetView',
-        name: 'PartidoIntranetView ',
-        component: PartidoIntranetView ,
-    },
-    {
-        path: '/intranetowner',
-        name: 'IntranetOwner ',
-        component: IntranetOwner ,
-    },
+  {
+    path: '/',
+    name: 'homeview',
+    component: HomeView
+  },
+  {
+    path: '/reservas',
+    name: 'reservas',
+    component: ReservasView,
+  },
+  {
+    path: '/perfil',
+    name: 'perfil',
+    component: PerfilView,
+  },
+  {
+    path: '/sobrenosotros',
+    name: 'sobrenosotros',
+    component: SobreNosotros,
+  },
+  {
+    path: '/products',
+    name: 'products',
+    component: Products,
+  },
+  {
+    path: '/partidos',
+    name: 'partidos',
+    component: PartidosView,
+  },
+  {
+    path: '/partido/:id',
+    name: 'PartidoDetailView',
+    component: PartidoDetailView,
+    props: true
+  },
+  {
+    path: '/intranet',
+    name: 'Intranet',
+    component: Intranet,
+  },
+  {
+    path: '/usuariointranet',
+    name: 'UsuarioIntranet',
+    component: UsuarioIntranet,
+  },
+  {
+    path: '/userprofile',
+    name: 'UserProfile',
+    component: UserProfile,
+  },
+  {
+    path: '/productointranet',
+    name: 'ProductoIntranet',
+    component: ProductoIntranet,
+  },
+  {
+    path: '/pistaintranet',
+    name: 'PistaIntranet',
+    component: PistaIntranet,
+  },
+  {
+    path: '/sesionintranet',
+    name: 'SesionIntranet',
+    component: SesionIntranet,
+  },
+  {
+    path: '/partidointranetView',
+    name: 'PartidoIntranetView',
+    component: PartidoIntranetView,
+  },
+  {
+    path: '/intranetowner',
+    name: 'IntranetOwner',
+    component: IntranetOwner,
+  },
+  {
+    path: '/grafica-compras',
+    name: 'GraficaComprasView',
+    component: GraficaComprasView,
+  },
 ];
 
 const router = createRouter({
-    history: createWebHistory(),
-    routes,
+  history: createWebHistory(),
+  routes,
 });
 
 app.use(router);
