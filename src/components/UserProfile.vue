@@ -21,8 +21,9 @@
       <h4>Reserva ID: {{ reserva.idReservation }}</h4>
       <p><strong>Fecha:</strong> {{ reserva.reservationDate }}</p>
       <p><strong>Precio:</strong> {{ reserva.reservationPrice }}€</p>
-      <p v-if="reserva.session && reserva.session.pista"><strong>Sesión:</strong> {{ reserva.session.sesionTime }} en {{ reserva.session.pista.name }} ({{ reserva.session.pista.duration }})</p>
-      <button @click="cancelReservation(reserva.idReservation)">Cancelar Reserva</button>
+      <p v-if="reserva.session && reserva.session.pista"><strong>Sesión:</strong> {{ reserva.session.sesionTime }} en {{
+        reserva.session.pista.name }} ({{ reserva.session.pista.duration }})</p>
+      <button @click="cancelReservation(reserva.idReservation, reserva.sesion)">Cancelar Reserva</button>
     </div>
     <button @click="logout">Cerrar Sesión</button>
   </div>
@@ -36,13 +37,13 @@ export default {
     return {
       currentUser: {},
       compras: [],
-      reservas: [], 
+      reservas: [],
     };
   },
   mounted() {
     this.loadUserData();
     this.loadUserPurchases();
-    this.loadUserReservations(); 
+    this.loadUserReservations();
   },
   methods: {
     loadUserData() {
@@ -57,15 +58,15 @@ export default {
     async loadUserPurchases() {
       try {
         const response = await userService.getUserPurchases(this.currentUser.idUser);
-        this.compras = response; 
+        this.compras = response;
       } catch (error) {
         console.error('Error al cargar las compras:', error);
       }
     },
-    async loadUserReservations() { 
+    async loadUserReservations() {
       try {
         const response = await userService.getUserReservations(this.currentUser.idUser);
-        this.reservas = response; 
+        this.reservas = response;
       } catch (error) {
         console.error('Error al cargar las reservas:', error);
       }
@@ -73,18 +74,20 @@ export default {
     async cancelPurchase(compraId) {
       try {
         await userService.deleteUserPurchase(this.currentUser.idUser, compraId);
-        this.loadUserPurchases(); 
-        window.location.reload(); 
+        this.loadUserPurchases();
+        window.location.reload();
       } catch (error) {
         console.error('Error al cancelar la compra:', error);
         alert('Error al cancelar la compra');
       }
     },
-    async cancelReservation(reservationId) {
+    async cancelReservation(reservationId, sesion) {
       try {
-        await userService.deleteUserReservation(reservationId);
-        this.loadUserReservations();
-        window.location.reload(); 
+        console.log(JSON.stringify(sesion) + "aaaaaaaaaaaaaaaaaaaaa");
+        await userService.deleteUserReservation(reservationId, sesion);
+        const reservations = this.loadUserReservations();
+        console.log(reservations);
+        window.location.reload();
       } catch (error) {
         console.error('Error al cancelar la reserva:', error);
         alert('Error al cancelar la reserva');

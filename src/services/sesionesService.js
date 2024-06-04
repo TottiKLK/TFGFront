@@ -6,6 +6,7 @@ const API_URL = 'http://localhost:5025';
 export const fetchSesiones = async () => {
   try {
     const response = await axios.get(`${API_URL}/Sesion`);
+    console.log(response + 'sesiones!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
     return response.data;
   } catch (error) {
     console.error('Error fetching sesiones:', error);

@@ -2,6 +2,8 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:5025/Usuario';
 const RESERVA_API_URL = 'http://localhost:5025/Reserva';
+const SESION_API_URL = 'http://localhost:5025/Sesion';
+
 
 const userService = {
     getUsers,
@@ -11,8 +13,8 @@ const userService = {
     getUserPurchases,
     deleteUserPurchase,
     buyProducts,
-    getUserReservations, 
-    deleteUserReservation 
+    getUserReservations,
+    deleteUserReservation
 };
 
 async function getUsers() {
@@ -107,8 +109,20 @@ async function getUserReservations(userId) {
     }
 }
 
-async function deleteUserReservation(reservationId) { 
+async function deleteUserReservation(reservationId, sesionOriginal) {
     try {
+
+        const sesionTimeFetch = await axios.get(`http://localhost:5025/Sesion/${sesionOriginal.idSesion}`)
+        console.log(sesionTimeFetch);
+        const response1 = await axios.put(`${SESION_API_URL}/${sesionOriginal.idSesion}`, {
+            idSesion: sesionOriginal.idSesion,
+            sesionTime: sesionOriginal.sesionTime,
+            sesionDate: sesionTimeFetch.data.sesionDate,
+            idPista: sesionOriginal.pista.idPista,
+            reservado: false
+        }
+        )
+        console.log(response1);
         const response = await axios.delete(`${RESERVA_API_URL}/${reservationId}`);
         return response.data;
     } catch (error) {
