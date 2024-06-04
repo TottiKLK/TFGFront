@@ -93,10 +93,10 @@ export default {
 }
 
 .company-logo {
-    width: 200px; /* Ajusta el tamaño del logo */
-    height: 200px; /* Ajusta el tamaño del logo */
-    border-radius: 50%; /* Hace que el logo sea redondo */
-    animation: rotate-logo 10s linear infinite; /* Hace que el logo gire lentamente */
+    width: 100px; 
+    height: 100px; 
+    border-radius: 50%; 
+    animation: rotate-logo 10s linear infinite; 
 }
 
 @keyframes rotate-logo {
