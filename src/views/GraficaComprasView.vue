@@ -1,4 +1,5 @@
 <template>
+  <LeftMenu />
     <div class="grafica-compras">
       <button @click="goBack" class="back-button">Volver Atrás</button>
       <h1>Gráfica de Compras</h1>
@@ -14,11 +15,13 @@
   import { useRouter } from 'vue-router';
   import ComprasChart from '@/components/ComprasChart_Component.vue';
   import { useUserStore } from '@/stores/userStore';
+  import LeftMenu from '@/components/LeftMenu_Component.vue';
   
   export default {
     name: 'GraficaComprasView',
     components: {
-      ComprasChart
+      ComprasChart,
+      LeftMenu
     },
     setup() {
       const router = useRouter();

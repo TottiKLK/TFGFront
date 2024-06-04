@@ -32,12 +32,16 @@ export const createReserva = async (reserva) => {
     }
 };
 
-export const updateReserva = async (id, reserva) => {
+export const updateSesion = async (id, sesion) => {
     try {
-        const response = await axios.put(`${API_URL}/Reserva/${id}`, reserva);
+        const response = await axios.put(`${API_URL}/Sesion/${id}`, sesion, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
         return response.data;
     } catch (error) {
-        console.error('Error updating reserva:', error);
+        console.error('Error updating sesion:', error.response ? error.response.data : error.message);
         throw error;
     }
 };

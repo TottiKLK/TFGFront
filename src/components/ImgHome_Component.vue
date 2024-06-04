@@ -6,7 +6,7 @@
         </video>
         <div class="overlay"></div>
         <div class="call-to-action">
-            <div class="company-name">PadelIM</div>
+            <img src="@/assets/logo.png" alt="Logo" class="company-logo" />
         </div>
     </div>
     <div class="about-us-container">
@@ -92,25 +92,20 @@ export default {
     z-index: 2;
 }
 
-.company-name {
-    background-color: #f28d35;
-    color: #ffffff;
-    padding: 1.5rem 3rem;
-    border-radius: 30px;
-    font-size: 2rem;
-    font-weight: bold;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    text-align: center;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    font-family: 'Poppins', sans-serif; 
+.company-logo {
+    width: 200px; /* Ajusta el tamaño del logo */
+    height: 200px; /* Ajusta el tamaño del logo */
+    border-radius: 50%; /* Hace que el logo sea redondo */
+    animation: rotate-logo 10s linear infinite; /* Hace que el logo gire lentamente */
 }
 
-.company-name:hover,
-.company-name:focus {
-    background-color: #e27635;
-    transform: scale(1.05);
-    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.4);
+@keyframes rotate-logo {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .about-us-container {
@@ -183,5 +178,4 @@ export default {
         height: 50vh;
     }
 }
-
 </style>

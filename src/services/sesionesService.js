@@ -1,7 +1,7 @@
 // sesionesService.js
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5025'; 
+const API_URL = 'http://localhost:5025';
 
 export const fetchSesiones = async () => {
   try {
@@ -34,6 +34,7 @@ export const updateSesion = async (id, sesion) => {
         'Content-Type': 'application/json'
       }
     });
+    console.log('Response from server:', response.data);
     return response.data;
   } catch (error) {
     console.error('Error updating sesion:', error.response ? error.response.data : error.message);

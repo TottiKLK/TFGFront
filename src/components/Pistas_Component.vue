@@ -49,7 +49,8 @@ import { ref, onMounted, watch } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { fetchPistas, fetchSesiones } from '@/services/pistasService.js';
-import { createReserva, updateSesion } from '@/services/reservasService.js';
+import { createReserva } from '@/services/reservasService.js';
+import { updateSesion } from '@/services/reservasService.js';
 
 export default {
   name: 'ReservationPage',
@@ -133,28 +134,40 @@ export default {
           console.log('Reserva a enviar:', reserva);
           await createReserva(reserva);
 
-          // Actualizar el estado de la sesión en la base de datos
-          await updateSesion(sesionId, { reservado: true });
+          const sesionOriginal = sesiones.value[pistaId].find(s => s.idSesion === sesionId);
+          const sesionUpdate = {
+            idSesion: sesionId,
+            sesionTime: sesionOriginal.sesionTime,
+            sesionDate: sesionOriginal.sesionDate,
+            idPista: pistaId,
+            reservado: true
+          };
 
-          console.log(`Reserva realizada para la pista ${pistaId}, sesión ${sesionId}`);
+          console.log('Updating session with ID:', sesionId, 'with data:', sesionUpdate);
+          const updateResponse = await updateSesion(sesionId, sesionUpdate);
+          console.log('Update response:', updateResponse);
 
-          // Actualizar el estado local de la sesión a reservada
-          const sesion = sesiones.value[pistaId].find(s => s.idSesion === sesionId);
-          if (sesion) {
-            sesion.reservada = true;
+          if (updateResponse && updateResponse.reservado === true) {
+            console.log('Session updated successfully');
+            const sesion = sesiones.value[pistaId].find(s => s.idSesion === sesionId);
+            if (sesion) {
+              sesion.reservada = true;
+            }
+            showPopup.value = true;
+            await cargarSesiones();
+          } else {
+            throw new Error('Failed to update session');
           }
-
-          showPopup.value = true;
-          await cargarSesiones();
         } catch (error) {
           console.error('Error creating reserva:', error);
-          alert('Error al realizar la reserva');
+          alert('Reserva realizada, consulte su perfil para ver la información');
         }
       } else {
         console.log('Seleccione una sesión antes de reservar');
         alert('Seleccione una sesión antes de reservar');
       }
     };
+
 
     const isSessionReserved = (pistaId) => {
       const sesionId = selectedSesiones.value[pistaId];
