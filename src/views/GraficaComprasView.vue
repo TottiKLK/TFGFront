@@ -5,7 +5,7 @@
       <h1>Gráfica de Compras</h1>
       <ComprasChart />
       <div class="total-gastos-container" v-if="totalGastos !== null">
-        <h2>Beneficios = {{ totalGastos }} €</h2>
+        <h2>Facturación Total = {{ totalGastos }} €</h2>
       </div>
     </div>
   </template>
