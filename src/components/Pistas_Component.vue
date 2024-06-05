@@ -22,7 +22,6 @@
             <option v-for="sesion in sesionesFiltradas(court.idPista)" :key="sesion.idSesion" :value="sesion.idSesion">
               {{ sesion.sesionTime }}
             </option>
-            <!-- Opciones reservadas (opcional) -->
             <option v-for="sesion in sesionesReservadas(court.idPista)" :key="sesion.idSesion" :value="sesion.idSesion"
               disabled>
               {{ sesion.sesionTime }} - Reservada
@@ -51,6 +50,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import { fetchPistas, fetchSesiones } from '@/services/pistasService.js';
 import { createReserva } from '@/services/reservasService.js';
 import { updateSesion } from '@/services/reservasService.js';
+import Swal from 'sweetalert2';
 
 export default {
   name: 'ReservationPage',
@@ -91,7 +91,6 @@ export default {
       }
     };
 
-
     const sesionesFiltradas = (pistaId) => {
       return sesiones.value[pistaId]
         ? sesiones.value[pistaId].filter(s => formatearFecha(s.sesionDate) === formatearNewFecha(selectedDate.value) && !s.reservada)
@@ -103,6 +102,7 @@ export default {
         ? sesiones.value[pistaId].filter(s => formatearFecha(s.sesionDate) === formatearNewFecha(selectedDate.value) && s.reservada)
         : [];
     };
+
     const formatearFecha = (fecha) => {
       const date = new Date(fecha);
       const formattedDate = date.toISOString().split('T')[0];
@@ -122,6 +122,15 @@ export default {
     };
 
     const reservar = async (pistaId) => {
+      if (!currentUser.value) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Lo siento',
+          text: 'No puedes reservar sin antes iniciar sesión',
+        });
+        return;
+      }
+
       const sesionId = selectedSesiones.value[pistaId];
       if (sesionId) {
         try {
@@ -155,19 +164,31 @@ export default {
             }
             showPopup.value = true;
             await cargarSesiones();
+            Swal.fire({
+              icon: 'success',
+              title: 'Enhorabuena',
+              text: 'Has reservado una pista',
+            });
           } else {
             throw new Error('Failed to update session');
           }
         } catch (error) {
           console.error('Error creating reserva:', error);
-          alert('Reserva realizada, consulte su perfil para ver la información');
+          Swal.fire({
+            icon: 'success',
+            title: 'Enhorabuena',
+            text: 'Enhorabuena has reservado una pista',
+          });
         }
       } else {
         console.log('Seleccione una sesión antes de reservar');
-        alert('Seleccione una sesión antes de reservar');
+        Swal.fire({
+          icon: 'warning',
+          title: 'Seleccione una sesión',
+          text: 'Seleccione una sesión antes de reservar',
+        });
       }
     };
-
 
     const isSessionReserved = (pistaId) => {
       const sesionId = selectedSesiones.value[pistaId];
@@ -200,7 +221,6 @@ export default {
   }
 };
 </script>
-
 <style scoped>
 .reservation-page {
   max-width: 1000px;
