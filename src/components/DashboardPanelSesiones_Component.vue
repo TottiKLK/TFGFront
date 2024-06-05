@@ -41,7 +41,8 @@ export default {
             sesionTime: '',
             sesionDate: '',
             idPista: '',
-            idSesion: null
+            idSesion: null,
+            reservado: false  // Aseguramos que el campo reservado está presente y es false por defecto
         });
 
         const cargarSesiones = async () => {
@@ -69,12 +70,13 @@ export default {
             try {
                 const sesionData = {
                     sesionTime: nuevaSesion.value.sesionTime.trim(),
-                    sesionDate: nuevaSesion.value.sesionDate,
-                    idPista: nuevaSesion.value.idPista
+                    sesionDate: new Date(nuevaSesion.value.sesionDate).toISOString(),
+                    idPista: nuevaSesion.value.idPista,
+                    reservado: nuevaSesion.value.reservado
                 };
                 const sesionCreada = await createSesion(sesionData);
                 sesiones.value.push(sesionCreada);
-                nuevaSesion.value = { sesionTime: '', sesionDate: '', idPista: '', idSesion: null };
+                nuevaSesion.value = { sesionTime: '', sesionDate: '', idPista: '', idSesion: null, reservado: false };
             } catch (error) {
                 console.error('Error al crear la sesión:', error.response ? error.response.data : error.message);
             }
@@ -83,9 +85,11 @@ export default {
         const editarSesion = async () => {
             try {
                 const sesionData = {
+                    idSesion: nuevaSesion.value.idSesion,
                     sesionTime: nuevaSesion.value.sesionTime.trim(),
-                    sesionDate: nuevaSesion.value.sesionDate,
-                    idPista: nuevaSesion.value.idPista
+                    sesionDate: new Date(nuevaSesion.value.sesionDate).toISOString(),
+                    idPista: nuevaSesion.value.idPista,
+                    reservado: nuevaSesion.value.reservado
                 };
                 const response = await updateSesion(nuevaSesion.value.idSesion, sesionData);
                 if (response) {
@@ -93,7 +97,7 @@ export default {
                     if (index !== -1) {
                         sesiones.value[index] = { ...sesiones.value[index], ...response };
                     }
-                    nuevaSesion.value = { sesionTime: '', sesionDate: '', idPista: '', idSesion: null };
+                    nuevaSesion.value = { sesionTime: '', sesionDate: '', idPista: '', idSesion: null, reservado: false };
                 } else {
                     console.error('La respuesta de la API está vacía');
                 }
@@ -112,7 +116,11 @@ export default {
         };
 
         const cargarSesionParaEdicion = (sesion) => {
-            nuevaSesion.value = { ...sesion, sesionDate: sesion.sesionDate.split('T')[0] };
+            nuevaSesion.value = { 
+                ...sesion, 
+                sesionDate: sesion.sesionDate.split('T')[0],
+                reservado: sesion.reservado
+            };
         };
 
         const getPistaName = (idPista) => {
@@ -139,6 +147,8 @@ export default {
     }
 };
 </script>
+
+
 
 <style scoped>
 .ds-panel {
