@@ -4,6 +4,7 @@
         <form @submit.prevent="nuevaSesion.idSesion ? editarSesion() : crearSesion()" class="sesion-form">
             <div class="form-row">
                 <input v-model="nuevaSesion.sesionTime" type="text" placeholder="Hora de la sesión (HH:MM)">
+                <input v-model="nuevaSesion.sesionDate" type="date" placeholder="Fecha de la sesión">
                 <select v-model="nuevaSesion.idPista">
                     <option disabled value="">Seleccione una pista</option>
                     <option v-for="pista in pistas" :key="pista.idPista" :value="pista.idPista">
@@ -16,6 +17,7 @@
         <div class="sesion-item" v-for="sesion in sesiones" :key="sesion.idSesion">
             <div class="detail-row">
                 <p>Hora: {{ sesion.sesionTime }}</p>
+                <p>Fecha: {{ sesion.sesionDate }}</p>
                 <p>Pista: {{ getPistaName(sesion.idPista) }}</p>
                 <button @click="cargarSesionParaEdicion(sesion)">Editar</button>
                 <button @click="handleEliminarSesion(sesion)">Eliminar</button>
@@ -23,6 +25,7 @@
         </div>
     </div>
 </template>
+
 
 <script>
 import { ref, onMounted } from 'vue';
@@ -36,6 +39,7 @@ export default {
         const pistasStore = usePistaStore();
         const nuevaSesion = ref({
             sesionTime: '',
+            sesionDate: '',
             idPista: '',
             idSesion: null
         });
@@ -43,12 +47,11 @@ export default {
         const cargarSesiones = async () => {
             try {
                 const response = await fetchSesiones();
-                console.log('Sesiones obtenidas:', response);
                 sesiones.value = response.map(s => ({
                     ...s,
-                    sesionTime: s.sesionTime ? String(s.sesionTime) : 'Hora no disponible'
+                    sesionTime: s.sesionTime ? String(s.sesionTime) : 'Hora no disponible',
+                    sesionDate: s.sesionDate ? s.sesionDate.split('T')[0] : 'Fecha no disponible'
                 }));
-                console.log('Sesiones procesadas:', sesiones.value);
             } catch (error) {
                 console.error('Error al cargar las sesiones:', error);
             }
@@ -66,12 +69,12 @@ export default {
             try {
                 const sesionData = {
                     sesionTime: nuevaSesion.value.sesionTime.trim(),
+                    sesionDate: nuevaSesion.value.sesionDate,
                     idPista: nuevaSesion.value.idPista
                 };
-                console.log('Datos de la sesión a crear:', sesionData);
                 const sesionCreada = await createSesion(sesionData);
                 sesiones.value.push(sesionCreada);
-                nuevaSesion.value = { sesionTime: '', idPista: '', idSesion: null };
+                nuevaSesion.value = { sesionTime: '', sesionDate: '', idPista: '', idSesion: null };
             } catch (error) {
                 console.error('Error al crear la sesión:', error.response ? error.response.data : error.message);
             }
@@ -79,16 +82,18 @@ export default {
 
         const editarSesion = async () => {
             try {
-                const response = await updateSesion(nuevaSesion.value.idSesion, {
-                    sessionTime: nuevaSesion.value.sessionTime.trim(), 
+                const sesionData = {
+                    sesionTime: nuevaSesion.value.sesionTime.trim(),
+                    sesionDate: nuevaSesion.value.sesionDate,
                     idPista: nuevaSesion.value.idPista
-                });
+                };
+                const response = await updateSesion(nuevaSesion.value.idSesion, sesionData);
                 if (response) {
                     const index = sesiones.value.findIndex(s => s.idSesion === nuevaSesion.value.idSesion);
                     if (index !== -1) {
                         sesiones.value[index] = { ...sesiones.value[index], ...response };
                     }
-                    nuevaSesion.value = { sessionTime: '', idPista: '', idSesion: null };
+                    nuevaSesion.value = { sesionTime: '', sesionDate: '', idPista: '', idSesion: null };
                 } else {
                     console.error('La respuesta de la API está vacía');
                 }
@@ -107,7 +112,7 @@ export default {
         };
 
         const cargarSesionParaEdicion = (sesion) => {
-            nuevaSesion.value = { ...sesion };
+            nuevaSesion.value = { ...sesion, sesionDate: sesion.sesionDate.split('T')[0] };
         };
 
         const getPistaName = (idPista) => {
