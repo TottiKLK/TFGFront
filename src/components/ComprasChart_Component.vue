@@ -34,7 +34,7 @@
             data: {
               labels: comprasData.map(data => data.usuario),
               datasets: [{
-                label: 'Dinero gastado en Compras',
+                label: 'Ingresos Totales',
                 data: comprasData.map(data => data.total),
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',

@@ -2,7 +2,7 @@
   <div class="container">
     <h1>Zona de Partidos</h1>
     <!-- Añadir el campo de búsqueda con animaciones y estilos -->
-    <input v-model="searchQuery" @input="filterPartidos" placeholder="Buscar por descripción" class="search-bar animated-input" />
+    <input v-model="searchQuery" @input="filterPartidos" placeholder="Buscar por localidad" class="search-bar animated-input" />
     <div class="partidos-grid">
       <div class="partido-card animated-card" v-for="(match, index) in filteredPartidos" :key="index">
         <img :src="match.photo" alt="Imagen del partido" class="partido-image" />
