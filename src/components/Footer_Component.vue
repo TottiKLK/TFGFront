@@ -8,7 +8,7 @@
                 <a href="/productos">Productos</a>
             </div>
             <div class="footer-info">
-                <p>Email: contacto@padel.com</p>
+                <p>Si eres una empresa y quieres colaborar con nosotros contacta con <a href="mailto:contacto@padel.com">contacto@padel.com</a></p>
                 <p>Tel: +34 123 456 789</p>
                 <p>Dirección: Calle Falsa 123, Madrid, España</p>
             </div>
