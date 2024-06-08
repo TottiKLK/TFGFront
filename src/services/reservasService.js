@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5025';
+const API_URL = 'http://padelimapi.retocsv.es';
 
 export const fetchReservas = async () => {
     try {

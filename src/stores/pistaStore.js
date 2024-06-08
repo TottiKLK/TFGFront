@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 
-const API_URL = 'http://localhost:5025';
+const API_URL = 'http://padelimapi.retocsv.es';
 
 export const usePistaStore = defineStore('pista', {
   state: () => ({

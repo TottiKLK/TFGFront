@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5025/Usuario';
-const RESERVA_API_URL = 'http://localhost:5025/Reserva';
-const SESION_API_URL = 'http://localhost:5025/Sesion';
+const API_URL = 'http://padelimapi.retocsv.es/Usuario';
+const RESERVA_API_URL = 'http://padelimapi.retocsv.es/Reserva';
+const SESION_API_URL = 'http://padelimapi.retocsv.es/Sesion';
 
 
 const userService = {
@@ -112,7 +112,7 @@ async function getUserReservations(userId) {
 async function deleteUserReservation(reservationId, sesionOriginal) {
     try {
 
-        const sesionTimeFetch = await axios.get(`http://localhost:5025/Sesion/${sesionOriginal.idSesion}`)
+        const sesionTimeFetch = await axios.get(`http://padelimapi.retocsv.es/Sesion/${sesionOriginal.idSesion}`)
         console.log(sesionTimeFetch);
         const response1 = await axios.put(`${SESION_API_URL}/${sesionOriginal.idSesion}`, {
             idSesion: sesionOriginal.idSesion,

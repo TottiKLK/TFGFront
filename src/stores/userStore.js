@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 
-const API_URL = 'http://localhost:5025/Usuario';
-const RESERVA_API_URL = 'http://localhost:5025/Reserva';
+const API_URL = 'http://padelimapi.retocsv.es/Usuario';
+const RESERVA_API_URL = 'http://padelimapi.retocsv.es/Reserva';
 
 export const useUserStore = defineStore('user', {
     state: () => ({

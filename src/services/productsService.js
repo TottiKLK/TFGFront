@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5025/Producto';
+const API_URL = 'http://padelimapi.retocsv.es/Producto';
 
 const getProducts = async () => {
     try {

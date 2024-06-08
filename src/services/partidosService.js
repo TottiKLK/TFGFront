@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5025';
+const API_URL = 'http://padelimapi.retocsv.es';
 
 export async function fetchPartidos() {
   try {

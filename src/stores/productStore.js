@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 
-const API_URL = 'http://localhost:5025/Producto';
+const API_URL = 'http://padelimapi.retocsv.es/Producto';
 
 export const useProductStore = defineStore('product', {
   state: () => ({
